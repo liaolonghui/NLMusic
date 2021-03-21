@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.el-menu {
+  border: none;
+  .el-submenu {
+    .el-menu-item {
+      background-color: #339999 !important;
+    }
+  }
+}
+
+.el-row {
+  margin-bottom: 50px;
+}
