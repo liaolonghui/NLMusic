@@ -165,9 +165,10 @@ export default {
     }
   },
   methods: {
-    // pageSize
+    // pageSize   (应该在pageSize变化时让pageNum变为1)
     handleSizeChange(val) {
       this.query.pageSize = val;
+      this.query.pageNum = 1;
       this.getSingerData()
     },
     // pageNum

@@ -23,7 +23,7 @@
       <el-table-column
         prop="lang"
         label="语种"
-        width="180">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="createdAt"
@@ -101,9 +101,10 @@ export default {
     }
   },
   methods: {
-    // pageSize
+    // pageSize      (应该在pageSize变化时让pageNum变为1，防止pageSize改变后出现不存在的pageNum)
     handleSizeChange(val) {
       this.query.pageSize = val;
+      this.query.pageNum = 1;
       this.getCountryTag();
     },
     // pageNum
