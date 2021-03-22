@@ -28,7 +28,7 @@ export default {
 
 <style lang="scss">
   .el-container {
-    height: 100%;
+    min-height: 100%;
     .el-header {
       background-color: #409EFF;
       color: #333;

@@ -4,6 +4,7 @@ module.exports = app => {
   });
   const Country = require('../models/Country');
   const Style = require('../models/Style');
+  const Singer = require('../models/Singer');
 
   // country
   // 增
@@ -30,8 +31,8 @@ module.exports = app => {
   })
   // 查详情
   router.get('/tag/country/:id', async (req, res) => {
-    const items = await Country.findById(req.params.id);
-    res.send(items);
+    const item = await Country.findById(req.params.id);
+    res.send(item);
   })
 
   // style
@@ -59,8 +60,52 @@ module.exports = app => {
   })
   // 查详情
   router.get('/tag/style/:id', async (req, res) => {
-    const items = await Style.findById(req.params.id);
-    res.send(items);
+    const item = await Style.findById(req.params.id);
+    res.send(item);
+  })
+
+  // singer
+  // 增
+  router.post('/addSinger', async (req, res) => {
+    const model = await Singer.create(req.body);
+    res.send(model);
+  });
+  // 删
+  router.delete('/deleteSinger/:id', async (req, res) => {
+    await Singer.findByIdAndDelete(req.params.id);
+    res.send({
+      success: true
+    });
+  });
+  // 改
+  router.put('/updateSinger/:id', async (req, res) => {
+    const model = await Singer.findByIdAndUpdate(req.params.id, req.body);
+    res.send(model);
+  })
+  // 查(分页查询) (关键字查询)
+  router.get('/singer', async (req, res) => {
+    let key = req.query.key || '';  // 关键字
+    let searchObj = null;
+    if (key) {
+      searchObj = { "name": {$regex: key, $options:'i'} };   // 使用正则 模糊查询
+    }
+
+    let numb = parseInt(req.query.pageNum) || 1;   // 第几页
+    let size = parseInt(req.query.pageSize) || 6;  // 一页几条数据
+    numb--;
+    const sum = numb * size;  // 跳过几条数据  (页数-1)*条数
+    
+    const count = await Singer.find(searchObj).countDocuments();
+    const items = await Singer.find(searchObj).populate('country style').skip(sum).limit(size);
+    res.send({
+      count: count,
+      singers: items
+    });
+  })
+  // 查详情
+  router.get('/singer/:id', async (req, res) => {
+    const item = await Singer.findById(req.params.id);
+    res.send(item);
   })
 
   app.use('/admin', router);
