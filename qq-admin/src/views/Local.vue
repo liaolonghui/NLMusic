@@ -14,6 +14,7 @@
       border
       stripe
       style="width: 100%">
+      <el-table-column type="index"></el-table-column>
       <el-table-column
         prop="country"
         label="国家/地区"
@@ -38,13 +39,23 @@
           {{ scope.row.updatedAt | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="warning" size="small" @click="showEditModal(scope.row._id)">修改</el-button>
           <el-button type="danger" size="small" @click="deleteCountryTag(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <!-- pagination -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="query.pageNum"
+      :page-sizes="[6, 10, 15]"
+      :page-size="query.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
 
     <!-- dialog -->
     <el-dialog
@@ -75,6 +86,11 @@ import dayjs from 'dayjs'
 export default {
   data() {
     return {
+      total: 0,
+      query: {
+        pageNum: 1,
+        pageSize: 6
+      },
       tableData: [],
       isShow: false,
       countryForm: {},
@@ -85,6 +101,16 @@ export default {
     }
   },
   methods: {
+    // pageSize
+    handleSizeChange(val) {
+      this.query.pageSize = val;
+      this.getCountryTag();
+    },
+    // pageNum
+    handleCurrentChange(val) {
+      this.query.pageNum = val;
+      this.getCountryTag();
+    },
     // 显示编辑对话框
     showEditModal(id) {
       this.isShow = true;
@@ -140,9 +166,10 @@ export default {
     },
     // 获取所有标签
     async getCountryTag(){
-      const res = await this.$http.get('tag/country');
+      const res = await this.$http.get('tag/country', { params: this.query });
       if (res.status == 200) {
-        this.tableData = res.data;
+        this.tableData = res.data.items;
+        this.total = res.data.total;
       }
     },
     // 获取标签详情

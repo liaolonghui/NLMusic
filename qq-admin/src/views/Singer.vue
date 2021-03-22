@@ -18,6 +18,7 @@
       border
       stripe
       style="width: 100%">
+      <el-table-column type="index"></el-table-column>
       <el-table-column
         prop="name"
         label="姓名"
@@ -31,7 +32,11 @@
       <el-table-column
         prop="sex"
         label="性别"
-        width="100">
+        width="80">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.sex === '男'" effect="dark">{{scope.row.sex}}</el-tag>
+          <el-tag v-else type="danger" effect="dark">{{scope.row.sex}}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="birth"
@@ -82,7 +87,7 @@
           <el-input v-model="singerForm.name"></el-input>
         </el-form-item>
         <el-form-item label="国家/地区" prop="country">
-          <el-select v-model="singerForm.country" placeholder="请选择">
+          <el-select v-model="singerForm.country" placeholder="请选择" filterable>
             <el-option
               v-for="item in countries"
               :key="item._id"
@@ -107,7 +112,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="流派" prop="style">
-          <el-select v-model="singerForm.style" placeholder="请选择">
+          <el-select v-model="singerForm.style" placeholder="请选择" filterable>
             <el-option
               v-for="item in styles"
               :key="item._id"
@@ -149,6 +154,11 @@ export default {
       singerForm: {},
       singerRules: {
         name: { required: true, message: '姓名不能为空', trigger: 'blur' },
+        country: { required: true, message: '国家/地区不能为空', trigger: 'blur' },
+        sex: { required: true, message: '性别不能为空', trigger: 'blur' },
+        birth: { required: true, message: '出生日不能为空', trigger: 'blur' },
+        style: { required: true, message: '风格流派不能为空', trigger: 'blur' },
+        description: { required: true, message: '描述不能为空', trigger: 'blur' },
       },
       countries: [],  // 国家标签
       styles: [],     // 风格标签
@@ -247,9 +257,9 @@ export default {
     },
     // 获取所有标签
     async getCountryTag() {
-      const res = await this.$http.get('tag/country');
+      const res = await this.$http.get('tag/country', { params: { pageNum: 1, pageSize: 100 } });  // 获取最多100条数据
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
-        this.countries = res.data;
+        this.countries = res.data.items;
       }
     },
     async getStyleTag() {

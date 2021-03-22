@@ -27,8 +27,17 @@ module.exports = app => {
   })
   // 查
   router.get('/tag/country', async (req, res) => {
-    const items = await Country.find();
-    res.send(items);
+    let num = parseInt(req.query.pageNum) || 1;
+    let size = parseInt(req.query.pageSize) || 6;
+    num--;
+    const skipSum = size * num;
+
+    const total = await Country.find().countDocuments();
+    const items = await Country.find().skip(skipSum).limit(size);
+    res.send({
+      items: items,
+      total: total
+    });
   })
   // 查详情
   router.get('/tag/country/:id', async (req, res) => {

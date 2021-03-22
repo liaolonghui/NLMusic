@@ -14,6 +14,7 @@
       border
       stripe
       style="width: 100%">
+      <el-table-column type="index"></el-table-column>
       <el-table-column
         prop="name"
         label="流派"
@@ -23,7 +24,7 @@
         prop="description"
         label="描述">
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="warning" size="small" @click="showEditModal(scope.row._id)">修改</el-button>
           <el-button type="danger" size="small" @click="deleteStyleTag(scope.row)">删除</el-button>
