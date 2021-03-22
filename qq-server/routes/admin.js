@@ -5,6 +5,7 @@ module.exports = app => {
   const Country = require('../models/Country');
   const Style = require('../models/Style');
   const Singer = require('../models/Singer');
+  const Album = require('../models/Album')
 
   // country
   // 增
@@ -107,6 +108,52 @@ module.exports = app => {
     const item = await Singer.findById(req.params.id);
     res.send(item);
   })
+
+
+  // 专辑 Album
+  // 增
+  router.post('/addAlbum', async (req, res) => {
+    const model = await Album.create(req.body);
+    res.send(model);
+  });
+  // 删
+  router.delete('/deleteAlbum/:id', async (req, res) => {
+    await Album.findByIdAndDelete(req.params.id);
+    res.send({
+      success: true
+    });
+  });
+  // 改
+  router.put('/updateAlbum/:id', async (req, res) => {
+    const model = await Album.findByIdAndUpdate(req.params.id, req.body);
+    res.send(model);
+  })
+  // 查(分页查询) (关键字查询)
+  router.get('/album', async (req, res) => {
+    let key = req.query.key || '';  // 关键字
+    let searchObj = null;
+    if (key) {
+      searchObj = { "name": {$regex: key, $options:'i'} };   // 使用正则 模糊查询
+    }
+
+    let numb = parseInt(req.query.pageNum) || 1;   // 第几页
+    let size = parseInt(req.query.pageSize) || 6;  // 一页几条数据
+    numb--;
+    const sum = numb * size;  // 跳过几条数据  (页数-1)*条数
+    
+    const count = await Album.find(searchObj).countDocuments();
+    const items = await Album.find(searchObj).populate('singer style').skip(sum).limit(size);
+    res.send({
+      count: count,
+      albums: items
+    });
+  })
+  // 查详情
+  router.get('/album/:id', async (req, res) => {
+    const item = await Album.findById(req.params.id);
+    res.send(item);
+  })
+
 
   app.use('/admin', router);
 

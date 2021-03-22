@@ -41,7 +41,7 @@
         <el-form-item label="流派" prop="name">
           <el-input v-model="styleForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="语种" prop="description">
+        <el-form-item label="描述" prop="description">
           <el-input v-model="styleForm.description"></el-input>
         </el-form-item>
       </el-form>

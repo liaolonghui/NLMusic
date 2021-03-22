@@ -18,7 +18,7 @@
       </el-menu-item>
       <el-menu-item index="style">
         <i class="el-icon-s-comment"></i>
-        <span>歌手风格</span>
+        <span>音乐流派</span>
       </el-menu-item>
     </el-submenu>
     <!-- 歌曲管理 -->
