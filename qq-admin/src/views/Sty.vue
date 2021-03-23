@@ -43,7 +43,7 @@
           <el-input v-model="styleForm.name"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="description">
-          <el-input v-model="styleForm.description"></el-input>
+          <el-input type="textarea" v-model="styleForm.description"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">

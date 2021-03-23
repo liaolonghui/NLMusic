@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column label="专辑图片" prop="img">
         <template slot-scope="scope">
-          <img :src="scope.row.img" alt="albumImg" height="30" />
+          <img :src="scope.row.img" alt="albumImg" height="30" style="display: block; cursor: pointer;" />
         </template>
       </el-table-column>
       <el-table-column
