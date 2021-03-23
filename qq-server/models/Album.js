@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
   style: { type: mongoose.SchemaTypes.ObjectId, ref: 'Style' },
   time: { type: String },  // 发行时间
   company: { type: String },  // 唱片公司
+  img: { type: String },     // 专辑图
   // musics: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Music' }]  // 有哪些音乐
 })
 

@@ -27,12 +27,17 @@
       <el-table-column
         prop="singer.name"
         label="歌手"
-        width="200">
+        width="160">
       </el-table-column>
       <el-table-column
         prop="style.name"
         label="流派"
-        width="200">
+        width="180">
+      </el-table-column>
+      <el-table-column label="专辑图片" prop="img">
+        <template slot-scope="scope">
+          <img :src="scope.row.img" alt="albumImg" height="30" />
+        </template>
       </el-table-column>
       <el-table-column
         prop="time"
@@ -108,6 +113,17 @@
         <el-form-item label="唱片公司" prop="company" style="width: 420px;">
           <el-input v-model="albumForm.company"></el-input>
         </el-form-item>
+        <el-form-item label="专辑图片" prop="img">
+          <el-upload
+            name="img"
+            class="img-uploader"
+            :action="uploadImgURL"
+            :show-file-list="false"
+            :on-success="handleImgSuccess">
+            <img v-if="albumForm.img" :src="albumForm.img" class="img">
+            <i v-else class="el-icon-plus img-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -131,19 +147,27 @@ export default {
       total: 0,   // 总数据条数
       tableData: [],  // 表格数据
       dialogVisible: false,
-      albumForm: {},
+      albumForm: {
+        img: '',  // 提前准备好img属性
+      },
       albumRules: {
-        name: { required: true, message: '姓名不能为空', trigger: 'blur' },
-        singer: { required: true, message: '歌手不能为空', trigger: 'blur' },
-        style: { required: true, message: '风格流派不能为空', trigger: 'blur' },
-        time: { required: true, message: '发行时间不能为空', trigger: 'blur' },
-        company: { required: true, message: '唱片公司不能为空', trigger: 'blur' },
+        name: { required: true, message: '专辑名称不能为空', trigger: 'blur' },
+        singer: { required: true, message: '请选择歌手', trigger: 'blur' },
+        style: { required: true, message: '请选择风格流派', trigger: 'blur' },
+        time: { required: true, message: '请填写发行时间', trigger: 'blur' },
+        company: { required: true, message: '请填写唱片公司', trigger: 'blur' },
+        img: { required: true, message: '请上传专辑图片' },
       },
       singers: [],  // 国家标签
       styles: [],     // 风格标签
     }
   },
   methods: {
+    // 图片
+    handleImgSuccess(res) {
+      this.albumForm.img = res;    // URL.createObjectURL().... 
+      // 如果不在albumForm里面先定义好img就不是响应式了。（或者使用$set）
+    },
     // pageSize   (应该在pageSize变化时让pageNum变为1)
     handleSizeChange(val) {
       this.query.pageSize = val;
@@ -257,7 +281,7 @@ export default {
   computed: {
     dialogTitle() {
       return this.albumForm._id ? '更新专辑数据' : '添加专辑';
-    }
+    },
   },
   filters: {
     formatDate(item) {
@@ -272,5 +296,27 @@ export default {
     .el-button {
       margin-left: -2px;
     }
+  }
+  .img-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .img-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .img-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 140px;
+    height: 140px;
+    line-height: 140px !important;
+    text-align: center;
+  }
+  .img {
+    height: 140px;
+    display: block;
   }
 </style>

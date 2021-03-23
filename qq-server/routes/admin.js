@@ -2,6 +2,8 @@ module.exports = app => {
   const router = require('express').Router({
     mergeParams: true
   });
+  const multer = require('multer');
+
   const Country = require('../models/Country');
   const Style = require('../models/Style');
   const Singer = require('../models/Singer');
@@ -163,6 +165,12 @@ module.exports = app => {
     res.send(item);
   })
 
+  // 图片上传   multer
+  const upload = multer({ dest: 'uploads/' });
+  router.post('/upload', upload.single('img'), (req, res) => {
+    // 直接把图片对应的路径返回给前端
+    res.send('http://localhost:8888/uploads/'+req.file.filename);
+  });
 
   app.use('/admin', router);
 
