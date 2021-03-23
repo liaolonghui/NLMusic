@@ -13,6 +13,9 @@ Vue.mixin({
   computed: {
     uploadImgURL() {
       return 'http://localhost:8888/admin/upload'
+    },
+    uploadMusic() {
+      return 'http://localhost:8888/admin/uploadMusic'
     }
   }
 })

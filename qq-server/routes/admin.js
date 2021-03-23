@@ -7,7 +7,8 @@ module.exports = app => {
   const Country = require('../models/Country');
   const Style = require('../models/Style');
   const Singer = require('../models/Singer');
-  const Album = require('../models/Album')
+  const Album = require('../models/Album');
+  const Music = require('../models/Music');
 
   // country
   // 增
@@ -164,6 +165,63 @@ module.exports = app => {
     const item = await Album.findById(req.params.id);
     res.send(item);
   })
+
+
+  // Music
+  // 增
+  router.post('/addMusic', async (req, res) => {
+    const model = await Music.create(req.body);
+    res.send(model);
+  });
+  // 删
+  router.delete('/deleteMusic/:id', async (req, res) => {
+    await Music.findByIdAndDelete(req.params.id);
+    res.send({
+      success: true
+    });
+  });
+  // 改
+  router.put('/updateMusic/:id', async (req, res) => {
+    const model = await Music.findByIdAndUpdate(req.params.id, req.body);
+    res.send(model);
+  })
+  // 查(分页查询) (关键字查询)
+  router.get('/music', async (req, res) => {
+    let key = req.query.key || '';  // 关键字
+    let searchObj = null;
+    if (key) {
+      searchObj = { "name": {$regex: key, $options:'i'} };   // 使用正则 模糊查询
+    }
+
+    let numb = parseInt(req.query.pageNum) || 1;   // 第几页
+    let size = parseInt(req.query.pageSize) || 4;  // 一页几条数据
+    numb--;
+    const sum = numb * size;  // 跳过几条数据  (页数-1)*条数
+    
+    const count = await Music.find(searchObj).countDocuments();
+    const items = await Music.find(searchObj).populate('singer album').skip(sum).limit(size);
+    res.send({
+      count: count,
+      musics: items
+    });
+  })
+  // 查详情
+  router.get('/music/:id', async (req, res) => {
+    const item = await Music.findById(req.params.id);
+    res.send(item);
+  })
+
+  // 音乐上传
+  const musicUP = multer({ dest: 'musics/' });
+  router.post('/uploadMusic', musicUP.single('music'), (req, res) => {
+    // 直接把音乐对应路径返回
+    res.send({
+      name: req.file.originalname,
+      path: 'http://localhost:8888/uploadMusic/'+req.file.filename
+    });
+  });
+
+
 
   // 图片上传   multer
   const upload = multer({ dest: 'uploads/' });
