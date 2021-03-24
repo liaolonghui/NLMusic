@@ -7,7 +7,7 @@
       </el-col>
       <el-col :span="9">
         <el-tooltip effect="dark" content="只有超级管理员能添加管理员" placement="top">
-          <el-button type="warning" @click="dialogVisible = true">添加管理员</el-button>
+          <el-button type="warning" @click="dialogVisible = true" :disabled="userLevel">添加管理员</el-button>
         </el-tooltip>
       </el-col>
     </el-row>
@@ -38,13 +38,19 @@
       </el-table-column>
       <el-table-column label="状态" width="100">
         <template slot-scope="scope">
-          {{scope.row.state}}
+          <el-switch
+            v-model="scope.row.state"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="changeState(scope.row)"
+            :disabled="userLevel">
+          </el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
-          <el-button type="warning" size="mini" @click="showEditDialog(scope.row._id)" >修改</el-button>
-          <el-button type="danger" size="mini" @click="deleteAdmin(scope.row)">删除</el-button>
+          <el-button type="warning" size="mini" @click="showEditDialog(scope.row._id)" :disabled="userLevel">修改</el-button>
+          <el-button type="danger" size="mini" @click="deleteAdmin(scope.row)" :disabled="userLevel">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,7 +65,7 @@
             <el-input v-model="adminForm.username"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="adminForm.password"></el-input>
+            <el-input v-model="adminForm.password" type="password"></el-input>
           </el-form-item>
           <el-form-item label="手机号" prop="telephone">
             <el-input v-model="adminForm.telephone"></el-input>
@@ -90,13 +96,20 @@ export default {
       },
       adminRules: {
         username: { required: true, message: '管理员不能为空', trigger: 'blur' },
-        password: { required: true, message: '密码不能为空', trigger: 'blur' },
+        // password: { required: true, message: '密码不能为空', trigger: 'blur' },  因为有可能不改变密码所以干脆不限制密码（为空时是不改变密码）
         telephone: { required: true, message: '手机号不能为空', trigger: 'blur' },
         type: { required: true, message: '请选择管理员类型', trigger: 'blur' },
       }
     }
   },
   methods: {
+    // 状态改变
+    async changeState(admin) {
+      const res = await this.$http.put(`rest/changeState/${admin._id}`, {state: admin.state});
+      if (res.status === 200) {
+        this.$message.success('状态改变成功');
+      }
+    },
     // 关闭对话框
     handleClose() {
       this.$refs['adminForm'].resetFields();
@@ -117,10 +130,10 @@ export default {
           const id = this.adminForm._id || '';
           if (id) {
             await this.$http.put(`rest/updateAdmin/${id}`, this.adminForm);
-            this.$message('修改成功');
+            this.$message.success('修改成功');
           } else {
             await this.$http.post('rest/addAdmin', this.adminForm);
-            this.$message('添加成功');
+            this.$message.success('添加成功');
           }
           this.$refs['adminForm'].resetFields();
           this.getAdmins();
@@ -138,6 +151,7 @@ export default {
       if (msg === 'confirm') {
         await this.$http.delete(`rest/deleteAdmin/${admin._id}`);
         this.$message.success(`删除管理员“${admin.username}”成功！`);
+        this.getAdmins();
       } else {
         this.$message.info('操作已取消');
       }
@@ -158,6 +172,10 @@ export default {
   computed: {
     dialogTitle() {
       return this.adminForm._id ? '修改管理员信息' : '添加管理员';
+    },
+    // 是否是超级管理员
+    userLevel() {
+      return !(localStorage.userType==='root')
     }
   }
 }

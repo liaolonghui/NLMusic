@@ -7,7 +7,7 @@
           <el-input v-model="userForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="userForm.password"></el-input>
+          <el-input v-model="userForm.password" type="password"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm()">登录</el-button>
@@ -36,6 +36,7 @@ export default {
           const res = await this.$http.post('login', this.userForm);   // 使用axios的响应拦截器拦截错误情况
           localStorage.token = res.data.token;
           localStorage.username = res.data.username;
+          localStorage.userType = res.data.userType;
           this.$router.push('/admin');
           this.$message.success('登录成功！');
         } else {

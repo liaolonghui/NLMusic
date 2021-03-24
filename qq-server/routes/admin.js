@@ -268,6 +268,15 @@ module.exports = app => {
     const model = await Admin.findByIdAndUpdate(req.params.id, req.body);
     res.send(model);
   });
+  // 改变管理员状态
+  router.put('/changeState/:id', adminLevel, async (req, res) => {
+    const model = await Admin.findByIdAndUpdate(req.params.id, {
+      $set: {
+        "state": req.body.state
+      }
+    });
+    res.send(model);
+  });
 
 
 
@@ -310,7 +319,8 @@ module.exports = app => {
     const token = jwt.sign({ id: user._id }, app.get('secret'));
     res.send({
       token,
-      username: user.username
+      username: user.username,
+      userType: user.type
     });
   });
 
