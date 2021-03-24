@@ -15,7 +15,6 @@
     <!-- table -->
     <el-table
       :data="musicTable"
-      border
       style="width: 100%">
       <el-table-column
         prop="name"
@@ -68,7 +67,7 @@
             <el-input v-model="musicForm.name"></el-input>
           </el-form-item>
           <el-form-item label="歌手" prop="singer">
-            <el-select v-model="musicForm.singer" clearable placeholder="请选择">
+            <el-select v-model="musicForm.singer" clearable placeholder="请选择" filterable>
               <el-option
                 v-for="item in singers"
                 :key="item._id"
@@ -78,7 +77,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="专辑" prop="album">
-            <el-select v-model="musicForm.album" clearable placeholder="请选择">
+            <el-select v-model="musicForm.album" clearable placeholder="请选择" filterable>
               <el-option
                 v-for="item in albums"
                 :key="item._id"

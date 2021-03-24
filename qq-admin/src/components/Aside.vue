@@ -41,6 +41,11 @@
       <i class="el-icon-mic"></i>
       <span>歌手管理</span>
     </el-menu-item>
+    <!-- 管理员 -->
+    <el-menu-item index="admin">
+      <i class="el-icon-user-solid"></i>
+      <span>管理员</span>
+    </el-menu-item>
   </el-menu>
 </template>
 

@@ -4,6 +4,9 @@ const path = require('path');
 
 let app = express();
 
+// secret
+app.set('secret', 'asfdghjhgfds');
+
 app.use(cors());
 app.use(express.json());
 

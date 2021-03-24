@@ -7,6 +7,7 @@ import Sty from '../views/Sty.vue'
 import Album from '../views/Album.vue'
 import Music from '../views/Music.vue'
 import Singer from '../views/Singer.vue'
+import Admin from '../views/Admin.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,7 @@ const routes = [
       { path: '/album', name: 'album', component: Album },
       { path: '/music', name: 'music', component: Music },
       { path: '/singer', name: 'singer', component: Singer },
+      { path: '/admin', name: 'admin', component: Admin },
     ]
   },
 ]

@@ -3,12 +3,14 @@ module.exports = app => {
     mergeParams: true
   });
   const multer = require('multer');
+  const jwt = require('jsonwebtoken');
 
   const Country = require('../models/Country');
   const Style = require('../models/Style');
   const Singer = require('../models/Singer');
   const Album = require('../models/Album');
   const Music = require('../models/Music');
+  const Admin = require('../models/Admin');
 
   // country
   // 增
@@ -166,6 +168,14 @@ module.exports = app => {
     res.send(item);
   })
 
+  // 图片上传   multer
+  const upload = multer({ dest: 'uploads/' });
+  router.post('/upload', upload.single('img'), (req, res) => {
+    // 直接把图片对应的路径返回给前端
+    res.send('http://localhost:8888/uploads/'+req.file.filename);
+  });
+
+
 
   // Music
   // 增
@@ -222,14 +232,55 @@ module.exports = app => {
   });
 
 
-
-  // 图片上传   multer
-  const upload = multer({ dest: 'uploads/' });
-  router.post('/upload', upload.single('img'), (req, res) => {
-    // 直接把图片对应的路径返回给前端
-    res.send('http://localhost:8888/uploads/'+req.file.filename);
+  // admin
+  // 查
+  router.get('/adminList', async (req, res) => {
+    const model = await Admin.find();
+    res.send(model);
+  });
+  // 增 （只有超级管理员能增）
+  router.post('/addAdmin', async (req, res) => {
+    const user = await Admin.findById(req.body.AdminID);
+    if (user.type === 'root') {
+      const model = await Admin.create(req.body);
+      res.send(model);
+    } else {
+      res.send('只有超级管理员可以添加管理员');
+    }
+  });
+  // 删 （只有超级管理员能删）
+  router.delete('/deleteAdmin/:id', async (req, res) => {
+    // await Admin.findByIdAndDelete(req.params.id);
+    res.send('删除成功');
+  });
+  // 改 （只有超级管理员能改）
+  router.put('/updateAdmin/:id', async (req, res) => {
+    res.send('修改成功');
   });
 
+
+  // 校验用户是否已经登录的中间件
+
   app.use('/admin', router);
+
+
+
+  // 登录 (登录接口不需要校验token，所以把它单独拿出来)
+  app.post('/admin/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await Admin.findOne({
+      username: username
+    }).select('+password');
+    if (!user) {
+      return res.status(442).send('用户不存在');
+    }
+    const valid = require('bcrypt').compareSync(password, user.password);
+    if (!valid) {
+      return res.status(442).send('密码错误');
+    }
+    // 发放token
+    const token = jwt.sign({ id: user._id }, app.get('secret'));
+    res.send({token});
+  });
 
 }
