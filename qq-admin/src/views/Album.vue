@@ -118,6 +118,7 @@
             name="img"
             class="img-uploader"
             :action="uploadImgURL"
+            :headers="getAuth()"
             :show-file-list="false"
             :on-success="handleImgSuccess">
             <img v-if="albumForm.img" :src="albumForm.img" class="img">

@@ -35,6 +35,7 @@ export default {
         if (valid) {
           const res = await this.$http.post('login', this.userForm);   // 使用axios的响应拦截器拦截错误情况
           localStorage.token = res.data.token;
+          localStorage.username = res.data.username;
           this.$router.push('/admin');
           this.$message.success('登录成功！');
         } else {

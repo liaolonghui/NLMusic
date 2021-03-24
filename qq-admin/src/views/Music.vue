@@ -93,6 +93,7 @@
               :limit="1"
               :file-list="musicForm.music"
               :action="uploadMusic"
+              :headers="getAuth()"
               :on-success="handleSuccess"
               :on-remove="handleRemove"
               :before-remove="beforeRemove"

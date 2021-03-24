@@ -4,6 +4,7 @@
       <div>
         <img src="../assets/logo.jpg" alt="logo" style="width: 40px; height:40px;vertical-align: -15px; margin: 5px;" />
         <span>南理音乐后台管理系统</span>
+        <span class="current">当前用户：{{name}}</span>
         <span class="out" @click="logout">退出登录</span>
       </div>
     </el-header>
@@ -31,6 +32,11 @@ export default {
       this.$router.push('/login');
     }
   },
+  computed: {
+    name() {
+      return localStorage.username || '';
+    }
+  }
 }
 </script>
 
@@ -49,9 +55,17 @@ export default {
       >span {
         height: 100%;
       }
+      .current {
+        position: absolute;
+        right: 50px;
+        top: -25px;
+        font-size: 14px;
+        color: #FFF;
+        text-decoration: underline;
+      }
       .out {
         position: absolute;
-        top: 20px;
+        top: 30px;
         right: 50px;
         display: block;
         background-color: #fff;

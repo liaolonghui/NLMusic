@@ -12,21 +12,32 @@ module.exports = app => {
   const Music = require('../models/Music');
   const Admin = require('../models/Admin');
 
+
+  // 在增删改的时候应该检验一下管理员是否有资格
+  const adminLevel = async (req, res, next) => {
+    if (req.user.type === 'root' && req.user.state) {
+      await next();
+    } else {
+      return res.status(403).send({ message: '当前账号权限不足' });
+    }
+  }
+
+
   // country
   // 增
-  router.post('/tag/addCountry', async (req, res) => {
+  router.post('/tag/addCountry', adminLevel, async (req, res) => {
     const model = await Country.create(req.body);
     res.send(model);
   });
   // 删
-  router.delete('/tag/deleteCountry/:id', async (req, res) => {
+  router.delete('/tag/deleteCountry/:id', adminLevel, async (req, res) => {
     await Country.findByIdAndDelete(req.params.id);
     res.send({
       success: true
     });
   });
   // 改
-  router.put('/tag/updateCountry/:id', async (req, res) => {
+  router.put('/tag/updateCountry/:id', adminLevel, async (req, res) => {
     const model = await Country.findByIdAndUpdate(req.params.id, req.body);
     res.send(model);
   })
@@ -52,19 +63,19 @@ module.exports = app => {
 
   // style
   // 增
-  router.post('/tag/addStyle', async (req, res) => {
+  router.post('/tag/addStyle', adminLevel, async (req, res) => {
     const model = await Style.create(req.body);
     res.send(model);
   });
   // 删
-  router.delete('/tag/deleteStyle/:id', async (req, res) => {
+  router.delete('/tag/deleteStyle/:id', adminLevel, async (req, res) => {
     await Style.findByIdAndDelete(req.params.id);
     res.send({
       success: true
     });
   });
   // 改
-  router.put('/tag/updateStyle/:id', async (req, res) => {
+  router.put('/tag/updateStyle/:id', adminLevel, async (req, res) => {
     const model = await Style.findByIdAndUpdate(req.params.id, req.body);
     res.send(model);
   })
@@ -81,19 +92,19 @@ module.exports = app => {
 
   // singer
   // 增
-  router.post('/addSinger', async (req, res) => {
+  router.post('/addSinger', adminLevel, async (req, res) => {
     const model = await Singer.create(req.body);
     res.send(model);
   });
   // 删
-  router.delete('/deleteSinger/:id', async (req, res) => {
+  router.delete('/deleteSinger/:id', adminLevel, async (req, res) => {
     await Singer.findByIdAndDelete(req.params.id);
     res.send({
       success: true
     });
   });
   // 改
-  router.put('/updateSinger/:id', async (req, res) => {
+  router.put('/updateSinger/:id', adminLevel, async (req, res) => {
     const model = await Singer.findByIdAndUpdate(req.params.id, req.body);
     res.send(model);
   })
@@ -126,19 +137,19 @@ module.exports = app => {
 
   // 专辑 Album
   // 增
-  router.post('/addAlbum', async (req, res) => {
+  router.post('/addAlbum', adminLevel, async (req, res) => {
     const model = await Album.create(req.body);
     res.send(model);
   });
   // 删
-  router.delete('/deleteAlbum/:id', async (req, res) => {
+  router.delete('/deleteAlbum/:id', adminLevel, async (req, res) => {
     await Album.findByIdAndDelete(req.params.id);
     res.send({
       success: true
     });
   });
   // 改
-  router.put('/updateAlbum/:id', async (req, res) => {
+  router.put('/updateAlbum/:id', adminLevel, async (req, res) => {
     const model = await Album.findByIdAndUpdate(req.params.id, req.body);
     res.send(model);
   })
@@ -170,7 +181,7 @@ module.exports = app => {
 
   // 图片上传   multer
   const upload = multer({ dest: 'uploads/' });
-  router.post('/upload', upload.single('img'), (req, res) => {
+  router.post('/upload', adminLevel, upload.single('img'), (req, res) => {
     // 直接把图片对应的路径返回给前端
     res.send('http://localhost:8888/uploads/'+req.file.filename);
   });
@@ -179,19 +190,19 @@ module.exports = app => {
 
   // Music
   // 增
-  router.post('/addMusic', async (req, res) => {
+  router.post('/addMusic', adminLevel, async (req, res) => {
     const model = await Music.create(req.body);
     res.send(model);
   });
   // 删
-  router.delete('/deleteMusic/:id', async (req, res) => {
+  router.delete('/deleteMusic/:id', adminLevel, async (req, res) => {
     await Music.findByIdAndDelete(req.params.id);
     res.send({
       success: true
     });
   });
   // 改
-  router.put('/updateMusic/:id', async (req, res) => {
+  router.put('/updateMusic/:id', adminLevel, async (req, res) => {
     const model = await Music.findByIdAndUpdate(req.params.id, req.body);
     res.send(model);
   })
@@ -223,7 +234,7 @@ module.exports = app => {
 
   // 音乐上传
   const musicUP = multer({ dest: 'musics/' });
-  router.post('/uploadMusic', musicUP.single('music'), (req, res) => {
+  router.post('/uploadMusic', adminLevel, musicUP.single('music'), (req, res) => {
     // 直接把音乐对应路径返回
     res.send({
       name: req.file.originalname,
@@ -238,25 +249,26 @@ module.exports = app => {
     const model = await Admin.find();
     res.send(model);
   });
+  router.get('/admin/:id', async (req, res) => {
+    const item = await Admin.findById(req.params.id);
+    res.send(item);
+  });
   // 增 （只有超级管理员能增）
-  router.post('/addAdmin', async (req, res) => {
-    const user = await Admin.findById(req.body.AdminID);
-    if (user.type === 'root') {
-      const model = await Admin.create(req.body);
-      res.send(model);
-    } else {
-      res.send('只有超级管理员可以添加管理员');
-    }
+  router.post('/addAdmin', adminLevel, async (req, res) => {
+    const model = await Admin.create(req.body);
+    res.send(model);
   });
   // 删 （只有超级管理员能删）
-  router.delete('/deleteAdmin/:id', async (req, res) => {
-    // await Admin.findByIdAndDelete(req.params.id);
+  router.delete('/deleteAdmin/:id', adminLevel, async (req, res) => {
+    await Admin.findByIdAndDelete(req.params.id);
     res.send('删除成功');
   });
   // 改 （只有超级管理员能改）
-  router.put('/updateAdmin/:id', async (req, res) => {
-    res.send('修改成功');
+  router.put('/updateAdmin/:id', adminLevel, async (req, res) => {
+    const model = await Admin.findByIdAndUpdate(req.params.id, req.body);
+    res.send(model);
   });
+
 
 
   // 校验用户是否已经登录的中间件
@@ -264,17 +276,16 @@ module.exports = app => {
     // 通过前端发送来的token进行校验
     const token = String(req.headers.authorization || '');
     if (!token) {
-      return res.status(401).send({message: '请在登录后进行操作'});  // 没有token
+      return res.status(401).send({message: '请在登录后1进行操作'});  // 没有token
     }
     const { id } = jwt.verify(token, app.get('secret'));  // 获取到加密前的对象
     if (!id) {
-      return res.status(401).send({message: '请在登录后进行操作'});  // token无效
+      return res.status(401).send({message: '请在登录后2进行操作'});  // token无效
     }
     req.user = await Admin.findById(id);
     if (!req.user) {
-      return res.status(401).send({message: '请在登录后进行操作'});
+      return res.status(401).send({message: '请在登录后3进行操作'});
     }
-
     await next();
   }
 
@@ -297,7 +308,10 @@ module.exports = app => {
     }
     // 发放token
     const token = jwt.sign({ id: user._id }, app.get('secret'));
-    res.send({token});
+    res.send({
+      token,
+      username: user.username
+    });
   });
 
 

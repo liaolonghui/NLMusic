@@ -12,10 +12,17 @@ Vue.prototype.$http = http
 Vue.mixin({
   computed: {
     uploadImgURL() {
-      return 'http://localhost:8888/admin/upload'
+      return 'http://localhost:8888/admin/rest/upload'
     },
     uploadMusic() {
-      return 'http://localhost:8888/admin/uploadMusic'
+      return 'http://localhost:8888/admin/rest/uploadMusic'
+    },
+  },
+  methods: {
+    getAuth() { 
+      return {
+        Authorization: localStorage.token || '' 
+      }
     }
   }
 })
