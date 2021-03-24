@@ -189,7 +189,7 @@ export default {
         type: 'warning'
       }).catch(err => err);
       if (msg === 'confirm') {
-        const res = await this.$http.delete(`deleteSinger/${singer._id}`);
+        const res = await this.$http.delete(`rest/deleteSinger/${singer._id}`);
         if (res.data.success) {
           this.$message.success(`成功删除歌手"${singer.name}"`);
           this.getSingerData();
@@ -206,14 +206,14 @@ export default {
         if (valid) {
           const id = this.singerForm._id || '';
           if (id) {
-            const res = await this.$http.put(`updateSinger/${id}`, this.singerForm);
+            const res = await this.$http.put(`rest/updateSinger/${id}`, this.singerForm);
             if (res.status === 200) {
               this.$message.success('修改成功!');
             } else {
               this.$message.error('修改失败!');
             }
           } else {
-            const res = await this.$http.post('addSinger', this.singerForm);
+            const res = await this.$http.post('rest/addSinger', this.singerForm);
             if (res.status === 200) {
               this.$message.success('添加成功!');
             } else {
@@ -234,7 +234,7 @@ export default {
     async showDialog(id) {
       this.dialogVisible = true;
       if (id) {
-        const res = await this.$http.get(`singer/${id}`);
+        const res = await this.$http.get(`rest/singer/${id}`);
         if (res.status >= 200 && res.status<300 || res.status ==304 ) {
           this.singerForm = res.data;
         }
@@ -248,7 +248,7 @@ export default {
     },
     // 获取所有歌手信息
     async getSingerData() {
-      const res = await this.$http.get('singer', {
+      const res = await this.$http.get('rest/singer', {
         params: this.query
       });
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
@@ -258,13 +258,13 @@ export default {
     },
     // 获取所有标签
     async getCountryTag() {
-      const res = await this.$http.get('tag/country', { params: { pageNum: 1, pageSize: 100 } });  // 获取最多100条数据
+      const res = await this.$http.get('rest/tag/country', { params: { pageNum: 1, pageSize: 100 } });  // 获取最多100条数据
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
         this.countries = res.data.items;
       }
     },
     async getStyleTag() {
-      const res = await this.$http.get('tag/style');
+      const res = await this.$http.get('rest/tag/style');
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
         this.styles = res.data;
       }

@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     async getAdmins() {
-      const res = await this.$http.get('adminList');
+      const res = await this.$http.get('rest/adminList');
       if (res.status>=200 && res.status<300 || res.status==304) {
         this.adminTable = res.data;
       } else {

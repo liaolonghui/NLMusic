@@ -132,10 +132,10 @@ export default {
         if (valid) {
           const id = this.countryForm._id || ''
           if (id) {
-            await this.$http.put(`tag/updateCountry/${id}`, this.countryForm);
+            await this.$http.put(`rest/tag/updateCountry/${id}`, this.countryForm);
             this.$message.success('修改成功！');
           } else {
-            await this.$http.post('tag/addCountry', this.countryForm);
+            await this.$http.post('rest/tag/addCountry', this.countryForm);
             this.$message.success('添加成功！');
           }
           this.$refs['countryFormRef'].resetFields();
@@ -158,7 +158,7 @@ export default {
         return err;
       });
       if (msg == 'confirm') {
-        await this.$http.delete(`tag/deleteCountry/${row._id}`);
+        await this.$http.delete(`rest/tag/deleteCountry/${row._id}`);
         this.$message.success('删除成功！');
         this.getCountryTag();
       } else {
@@ -167,7 +167,7 @@ export default {
     },
     // 获取所有标签
     async getCountryTag(){
-      const res = await this.$http.get('tag/country', { params: this.query });
+      const res = await this.$http.get('rest/tag/country', { params: this.query });
       if (res.status == 200) {
         this.tableData = res.data.items;
         this.total = res.data.total;
@@ -175,7 +175,7 @@ export default {
     },
     // 获取标签详情
     async getOneCountry(id) {
-      const res = await this.$http.get(`tag/country/${id}`);
+      const res = await this.$http.get(`rest/tag/country/${id}`);
       this.countryForm = res.data;
     }
 

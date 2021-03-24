@@ -172,7 +172,7 @@ export default {
     // 显示dialog
     async showEditDialog(id) {
       if (id) {
-        const res = await this.$http.get(`music/${id}`);
+        const res = await this.$http.get(`rest/music/${id}`);
         this.musicForm = res.data;
         this.dialogVisible = true;
       }
@@ -185,7 +185,7 @@ export default {
           type: 'warning'
         }).catch(err => err);
         if (msg === 'confirm') {
-          const res = await this.$http.delete(`deleteMusic/${music._id}`);
+          const res = await this.$http.delete(`rest/deleteMusic/${music._id}`);
           if (res.status>=200 && res.status<300 || res.status==304) {
             this.$message.success('成功删除音乐');
             this.getMusics();
@@ -200,14 +200,14 @@ export default {
         if (valid) {
           const id = this.musicForm._id || '';
           if (id) {
-            const res = await this.$http.put(`updateMusic/${id}`, this.musicForm);
+            const res = await this.$http.put(`rest/updateMusic/${id}`, this.musicForm);
             if (res.status === 200) {
               this.$message.success('修改成功!');
             } else {
               this.$message.error('修改失败!');
             }
           } else {
-            const res = await this.$http.post('addMusic', this.musicForm);
+            const res = await this.$http.post('rest/addMusic', this.musicForm);
             if (res.status === 200) {
               this.$message.success('添加成功!');
             } else {
@@ -227,7 +227,7 @@ export default {
     },
     // 查询音乐
     async getMusics() {
-      const res = await this.$http.get('music', { params: this.query });
+      const res = await this.$http.get('rest/music', { params: this.query });
       if (res.status >=200 && res.status < 300 || res.status===304) {
         this.musicTable = res.data.musics;
         this.total = res.data.count;
@@ -235,8 +235,8 @@ export default {
     },
     // 查询singers  albums
     async getSingersAndAlbums() {
-      const res1 = await this.$http.get('singer', { params: { pageSize: 1000 } });
-      const res2 = await this.$http.get('album', { params: { pageSize: 1000 } });
+      const res1 = await this.$http.get('rest/singer', { params: { pageSize: 1000 } });
+      const res2 = await this.$http.get('rest/album', { params: { pageSize: 1000 } });
       this.singers = res1.data.singers;
       this.albums = res2.data.albums;
     }

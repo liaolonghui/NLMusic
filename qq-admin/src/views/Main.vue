@@ -4,6 +4,7 @@
       <div>
         <img src="../assets/logo.jpg" alt="logo" style="width: 40px; height:40px;vertical-align: -15px; margin: 5px;" />
         <span>南理音乐后台管理系统</span>
+        <span class="out" @click="logout">退出登录</span>
       </div>
     </el-header>
     <el-container>
@@ -22,7 +23,14 @@ import Aside from '../components/Aside'
 export default {
   components: {
     Aside
-  }
+  },
+  methods: {
+    logout() {
+      localStorage.clear();
+      this.$message.success('退出成功！');
+      this.$router.push('/login');
+    }
+  },
 }
 </script>
 
@@ -37,8 +45,26 @@ export default {
       font-weight: 700;
       height: 80px !important;
       line-height: 80px;
+      position: relative;
       >span {
         height: 100%;
+      }
+      .out {
+        position: absolute;
+        top: 20px;
+        right: 50px;
+        display: block;
+        background-color: #fff;
+        font-size: 16px;
+        border: 3px solid #eaeaea;
+        border-radius: 20px;
+        cursor: pointer;
+        width: 100px;
+        height: 35px;
+        line-height: 30px;
+        &:hover {
+          box-shadow: 0px 0px 10px #eee inset;
+        }
       }
     }
     .el-aside {

@@ -192,7 +192,7 @@ export default {
         type: 'warning'
       }).catch(err => err);
       if (msg === 'confirm') {
-        const res = await this.$http.delete(`deleteAlbum/${album._id}`);
+        const res = await this.$http.delete(`rest/deleteAlbum/${album._id}`);
         if (res.data.success) {
           this.$message.success(`成功删除专辑"${album.name}"`);
           this.getAlbumData();
@@ -209,14 +209,14 @@ export default {
         if (valid) {
           const id = this.albumForm._id || '';
           if (id) {
-            const res = await this.$http.put(`updateAlbum/${id}`, this.albumForm);
+            const res = await this.$http.put(`rest/updateAlbum/${id}`, this.albumForm);
             if (res.status === 200) {
               this.$message.success('修改专辑成功!');
             } else {
               this.$message.error('修改专辑失败!');
             }
           } else {
-            const res = await this.$http.post('addAlbum', this.albumForm);
+            const res = await this.$http.post('rest/addAlbum', this.albumForm);
             if (res.status === 200) {
               this.$message.success('添加专辑成功!');
             } else {
@@ -237,7 +237,7 @@ export default {
     async showDialog(id) {
       this.dialogVisible = true;
       if (id) {
-        const res = await this.$http.get(`album/${id}`);
+        const res = await this.$http.get(`rest/album/${id}`);
         if (res.status >= 200 && res.status<300 || res.status ==304 ) {
           this.albumForm = res.data;
         }
@@ -251,7 +251,7 @@ export default {
     },
     // 获取所有专辑信息
     async getAlbumData() {
-      const res = await this.$http.get('album', {
+      const res = await this.$http.get('rest/album', {
         params: this.query
       });
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
@@ -261,13 +261,13 @@ export default {
     },
     // 获取所有options
     async getSingers() {
-      const res = await this.$http.get('singer', { params: { pageNum: 1, pageSize: 1000 } });  // 获取最多1000条数据
+      const res = await this.$http.get('rest/singer', { params: { pageNum: 1, pageSize: 1000 } });  // 获取最多1000条数据
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
         this.singers = res.data.singers;
       }
     },
     async getStyleTag() {
-      const res = await this.$http.get('tag/style');
+      const res = await this.$http.get('rest/tag/style');
       if (res.status >= 200 && res.status<300 || res.status ==304 ) {
         this.styles = res.data;
       }

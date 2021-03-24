@@ -260,8 +260,25 @@ module.exports = app => {
 
 
   // 校验用户是否已经登录的中间件
+  const auth = async (req, res, next) => {
+    // 通过前端发送来的token进行校验
+    const token = String(req.headers.authorization || '');
+    if (!token) {
+      return res.status(401).send({message: '请在登录后进行操作'});  // 没有token
+    }
+    const { id } = jwt.verify(token, app.get('secret'));  // 获取到加密前的对象
+    if (!id) {
+      return res.status(401).send({message: '请在登录后进行操作'});  // token无效
+    }
+    req.user = await Admin.findById(id);
+    if (!req.user) {
+      return res.status(401).send({message: '请在登录后进行操作'});
+    }
 
-  app.use('/admin', router);
+    await next();
+  }
+
+  app.use('/admin/rest', auth, router);
 
 
 
@@ -272,15 +289,22 @@ module.exports = app => {
       username: username
     }).select('+password');
     if (!user) {
-      return res.status(442).send('用户不存在');
+      return res.status(442).send({message: '用户不存在'});
     }
     const valid = require('bcrypt').compareSync(password, user.password);
     if (!valid) {
-      return res.status(442).send('密码错误');
+      return res.status(442).send({message: '密码错误'});
     }
     // 发放token
     const token = jwt.sign({ id: user._id }, app.get('secret'));
     res.send({token});
   });
 
+
+  // 错误处理函数
+  app.use(async (err, req, res, next) => {
+    res.status(err.status || 500).send({
+      message: err.message
+    })
+  })
 }

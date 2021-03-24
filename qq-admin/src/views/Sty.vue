@@ -89,10 +89,10 @@ export default {
         if (valid) {
           const id = this.styleForm._id || ''
           if (id) {
-            await this.$http.put(`tag/updateStyle/${id}`, this.styleForm);
+            await this.$http.put(`rest/tag/updateStyle/${id}`, this.styleForm);
             this.$message.success('修改成功！');
           } else {
-            await this.$http.post('tag/addStyle', this.styleForm);
+            await this.$http.post('rest/tag/addStyle', this.styleForm);
             this.$message.success('添加成功！');
           }
           this.$refs['styleFormRef'].resetFields();
@@ -115,7 +115,7 @@ export default {
         return err;
       });
       if (msg == 'confirm') {
-        await this.$http.delete(`tag/deleteStyle/${row._id}`);
+        await this.$http.delete(`rest/tag/deleteStyle/${row._id}`);
         this.$message.success('删除成功！');
         this.getStyleTag();
       } else {
@@ -124,14 +124,14 @@ export default {
     },
     // 获取所有标签
     async getStyleTag(){
-      const res = await this.$http.get('tag/style');
+      const res = await this.$http.get('rest/tag/style');
       if (res.status == 200) {
         this.tableData = res.data;
       }
     },
     // 获取标签详情
     async getOneStyle(id) {
-      const res = await this.$http.get(`tag/style/${id}`);
+      const res = await this.$http.get(`rest/tag/style/${id}`);
       this.styleForm = res.data;
     }
 
