@@ -320,6 +320,7 @@ module.exports = app => {
     res.send({
       token,
       username: user.username,
+      userState: user.state,
       userType: user.type
     });
   });

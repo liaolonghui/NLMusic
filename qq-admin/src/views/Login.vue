@@ -34,9 +34,10 @@ export default {
       this.$refs['userForm'].validate(async (valid) => {
         if (valid) {
           const res = await this.$http.post('login', this.userForm);   // 使用axios的响应拦截器拦截错误情况
-          localStorage.token = res.data.token;
-          localStorage.username = res.data.username;
-          localStorage.userType = res.data.userType;
+          localStorage.token = res.data.token;  // token
+          localStorage.username = res.data.username;  // 管理员
+          localStorage.userType = res.data.userType;  // 管理员类型
+          localStorage.userState = res.data.userState // 管理员状态
           this.$router.push('/admin');
           this.$message.success('登录成功！');
         } else {

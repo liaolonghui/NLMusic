@@ -175,7 +175,7 @@ export default {
     },
     // 是否是超级管理员
     userLevel() {
-      return !(localStorage.userType==='root')
+      return !(localStorage.userType==='root' && localStorage.userState);  // 必须是超级管理员并且状态为true
     }
   }
 }
