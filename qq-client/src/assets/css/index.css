@@ -1,0 +1,23 @@
+div,header,main,aside,footer,section,nav,h1,h2,h3,h4,h5,h6,p,form,input,ol,ul,li,a {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+input {
+  outline: none;
+}
