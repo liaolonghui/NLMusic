@@ -6,6 +6,5 @@
 
 <style>
   .download {
-    border-top: 1px solid #ccc;
   }
 </style>

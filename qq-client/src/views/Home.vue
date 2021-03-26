@@ -6,7 +6,7 @@
         <span>南理音乐</span>
       </span>
       <nav class="header-nav">
-        <router-link to="/">音乐馆</router-link>
+        <router-link to="/home" :class="{'router-link-exact-active': HomeActive}">音乐馆</router-link>
         <router-link to="/user">我的音乐</router-link>
         <router-link to="/download" class="clientDown">
           <span>客户端</span>
@@ -34,13 +34,22 @@
 <script>
 export default {
   name: 'Home',
-  components: {}
+  components: {},
+  computed: {
+    HomeActive () {
+      return this.$route.path.indexOf('/home') !== -1
+    }
+  }
 }
 </script>
 
 <style>
-header {
+
+.home>header {
   display: flex;
+  width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid #ccc;
 }
 
 header>.school {
@@ -104,6 +113,17 @@ nav.header-nav a:hover {
 
 .clientDown {
   position: relative;
+}
+.clientDown::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 50px;
+  display: block;
+  width: 35px;
+  height: 13px;
+  background: url(../assets/mark.png);
+  background-size: 35px 13px;
 }
 .clientDown:hover>.down {
   display: block;

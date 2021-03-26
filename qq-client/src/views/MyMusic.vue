@@ -6,6 +6,5 @@
 
 <style>
   .my-music {
-    border-top: 1px solid #ccc;
   }
 </style>

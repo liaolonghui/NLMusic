@@ -7,7 +7,5 @@
 <style>
 #app {
   color: #2c3e50;
-  width: 1200px;
-  margin: 0 auto;
 }
 </style>
