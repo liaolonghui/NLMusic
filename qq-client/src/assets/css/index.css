@@ -21,3 +21,7 @@ a {
 input {
   outline: none;
 }
+
+.container {
+  background-color: #f6f6f6;
+}

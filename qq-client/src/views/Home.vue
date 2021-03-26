@@ -2,7 +2,7 @@
   <div class="home">
     <header>
       <span class="school">
-        <img src="@/assets/logo.jpg" alt="logo" width="50px">
+        <img src="@/assets/imgs/logo.jpg" alt="logo" width="50px">
         <span>南理音乐</span>
       </span>
       <nav class="header-nav">
@@ -122,7 +122,7 @@ nav.header-nav a:hover {
   display: block;
   width: 35px;
   height: 13px;
-  background: url(../assets/mark.png);
+  background: url(../assets/imgs/mark.png);
   background-size: 35px 13px;
 }
 .clientDown:hover>.down {

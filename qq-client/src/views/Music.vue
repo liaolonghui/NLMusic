@@ -9,7 +9,7 @@
       <router-link to="/home/tv">电台</router-link>
       <router-link to="/home/album">数字专辑</router-link>
     </nav>
-    <router-view style="width: 100vw; background-color: #F6F6F6;"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
