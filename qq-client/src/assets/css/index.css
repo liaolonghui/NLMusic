@@ -22,6 +22,6 @@ input {
   outline: none;
 }
 
-.container {
-  background-color: #f6f6f6;
+.line-gra {
+  background-image: linear-gradient(#fafafa, #fff);
 }

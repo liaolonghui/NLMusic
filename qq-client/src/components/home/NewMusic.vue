@@ -1,5 +1,13 @@
 <template>
-  <div class="container">
+  <div class="newMusic">
     newMusic
   </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {}
+  }
+}
+</script>
