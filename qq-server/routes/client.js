@@ -9,10 +9,13 @@ module.exports = app => {
   });
   router.get('/album/:id', async (req, res) => {
     // 获取专辑所含歌曲信息
-    const item = await Music.find({
+    const items = await Music.find({
       album: req.params.id
-    }).populate('album singer');
-    res.send(item)
+    }).populate('album style singer');
+    // 获取专辑的流派
+    const { style } = await Album.findById(req.params.id).populate('style');
+    items[0].album.style = style;
+    res.send(items)
   })
 
 
