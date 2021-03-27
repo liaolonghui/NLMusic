@@ -145,7 +145,13 @@ export default {
   },
   watch: {
     volume (newVolume) {
-      this.$refs[this.musicId][0].volume = newVolume / 100
+      if (newVolume > 100) {
+        this.$refs[this.musicId][0].volume = 1
+      } else if (newVolume < 0) {
+        this.$refs[this.musicId][0].volume = 0
+      } else {
+        this.$refs[this.musicId][0].volume = newVolume / 100
+      }
     }
   }
 }

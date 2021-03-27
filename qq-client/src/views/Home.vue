@@ -148,6 +148,7 @@ nav.header-nav a:hover {
   border-radius: 10px;
   width: 100px;
   border: none;
+  outline: none;
   background-color: #42b983;
   color: #fff;
   padding: 2px;

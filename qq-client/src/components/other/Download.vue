@@ -6,8 +6,8 @@
       <ul class="items">
         <li :class="{'active': Active===1}" @click="changeActive(1)">PC版</li>
         <li :class="{'active': Active===2}" @click="changeActive(2)">Mac版</li>
-        <li :class="{'active': Active===3}" @click="changeActive(3)">iPhone版</li>
-        <li :class="{'active': Active===4}" @click="changeActive(4)">Android版</li>
+        <li :class="{'active': Active===3}" @click="changeActive(3)">iPhone</li>
+        <li :class="{'active': Active===4}" @click="changeActive(4)">Android</li>
       </ul>
     </section>
   </div>

@@ -35,7 +35,7 @@
         prop="music.path"
         label="音乐详情">
         <template slot-scope="scope">
-          <audio :src="scope.row.music[0].path" controls loop></audio>
+          <audio :src="scope.row.music[0].path" controls loop style="outline: none;"></audio>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160">
