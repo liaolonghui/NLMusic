@@ -34,9 +34,11 @@
     </main>
     <!-- 播放栏 -->
     <footer class="playRow" v-if="musicId">
-      <b>{{ currentMusic.name }}</b><small> - {{ currentMusic.singer }}</small>
+      <p><b>{{ currentMusic.name }}</b><small> - {{ currentMusic.singer }}</small></p>
       <p>{{ currentMusic.time }} / {{ currentTime }}</p>
       <i @click="playOrPause" :class="{ play: playing }"></i>
+      <label>音量：<input type="text" v-model="volume" ></label>
+      <progress @mousedown="changeProgress" :value="nowCurrentTime" min="0" :max="currentMusic.nowTime"></progress>
     </footer>
   </div>
 </template>
@@ -55,18 +57,28 @@ export default {
         singer: {},
         music: [{}]
       }],
-      musicsTime: {}, // 保存音乐时长
+      musicsTime: {}, // 保存音乐时长(处理过)
+      nowMusicTime: {}, // 保存音乐时长(未处理过)
       musicId: '', // 保存当前音乐id
       playing: false, // 是否正在播放音乐
       currentMusic: { // 当前音乐
-        time: 0,
+        time: 0, // 处理过的时间
+        nowTime: 0, // 未经处理的时间
         name: '',
         singer: ''
       },
-      currentTime: '0:0' // 当前音乐已经播放时长
+      currentTime: '0:0', // 当前音乐已经播放时长
+      nowCurrentTime: 0, // 未经处理的当前已播放
+      volume: 0 // 音量
     }
   },
   methods: {
+    // changeProgress
+    changeProgress (e) {
+      const rate = e.clientX / window.innerWidth
+      this.nowCurrentTime = rate * this.currentMusic.nowTime
+      this.$refs[this.musicId][0].currentTime = this.nowCurrentTime
+    },
     // 保存当前音乐已播放时间
     saveCurrentTime (id) {
       return () => {
@@ -74,6 +86,7 @@ export default {
         const s = Math.floor(t % 60)
         const m = Math.round(t / 60)
         this.currentTime = m + ':' + s
+        this.nowCurrentTime = t
       }
     },
     // 播放音乐
@@ -92,7 +105,10 @@ export default {
         this.currentMusic.singer = singer
         this.currentMusic.name = name
         this.currentMusic.time = this.musicsTime[id]
+        this.currentMusic.nowTime = this.nowMusicTime[id]
         this.timer = setInterval(this.saveCurrentTime(id), 1000)
+        // 获取音量
+        this.volume = this.$refs[id][0].volume * 100
       }
     },
     // 播放或暂停音乐
@@ -114,6 +130,7 @@ export default {
       const second = Math.round(musicDom[0].duration % 60)
       const time = min + ':' + second
       this.$set(this.musicsTime, id, time)
+      this.$set(this.nowMusicTime, id, musicDom[0].duration)
     },
     // 获取专辑中歌曲信息等
     async getAlbumList () {
@@ -125,6 +142,11 @@ export default {
   },
   created () {
     this.getAlbumList()
+  },
+  watch: {
+    volume (newVolume) {
+      this.$refs[this.musicId][0].volume = newVolume / 100
+    }
   }
 }
 </script>
@@ -184,8 +206,10 @@ export default {
     height: 70px;
     background-color: #42b983;
     padding-top: 15px;
-    padding-left: 50px;
     line-height: 20px;
+  }
+  .playRow>p {
+    padding-left: 50px;
   }
   .playRow>i {
     background-image: url('../../assets/imgs/cover.png');
@@ -201,5 +225,21 @@ export default {
   }
   i.play {
     background-image: url(../../assets/imgs/play.jpg) !important;
+  }
+  .playRow>progress {
+    width: 100%;
+    height: 10px;
+    cursor: pointer;
+    position: absolute;
+    top: -3px;
+  }
+  .playRow>label {
+    position: absolute;
+    right: 100px;
+    top: 25px;
+    width: 100px;
+  }
+  .playRow>label>input {
+    width: 30px;
   }
 </style>
