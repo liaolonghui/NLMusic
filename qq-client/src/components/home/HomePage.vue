@@ -4,7 +4,7 @@
       <h2>专辑推荐</h2>
       <div class="album-container">
         <ul class="album-items" :style="{'left': albumLeft+'px'}">
-          <li v-for="item in albumData" :key="item._id">
+          <li v-for="item in albumData" :key="item._id" @click="$router.push(`/home/album/${item._id}`)">
             <figure>
               <img :src="item.img" :alt="item.name">
             </figure>

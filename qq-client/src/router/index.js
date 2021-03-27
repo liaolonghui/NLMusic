@@ -12,6 +12,7 @@ import Sort from '../components/home/Sort.vue'
 import TV from '../components/home/TV.vue'
 import Album from '../components/home/Album.vue'
 import HomePage from '../components/home/HomePage.vue'
+import AlbumDetail from '../components/albumDetail/index.vue'
 
 Vue.use(VueRouter)
 
@@ -33,7 +34,9 @@ const routes = [
           { path: '/home/top', name: 'Top', component: Top },
           { path: '/home/sort', name: 'Sort', component: Sort },
           { path: '/home/tv', name: 'TV', component: TV },
-          { path: '/home/album', name: 'Album', component: Album }
+          { path: '/home/album', name: 'Album', component: Album },
+          // ...
+          { path: '/home/album/:id', name: 'AlbumDetail', component: AlbumDetail, props: true }
         ]
       },
       // ...
