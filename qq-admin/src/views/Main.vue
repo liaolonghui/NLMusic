@@ -2,7 +2,7 @@
   <el-container>
     <el-header>
       <div>
-        <img src="../assets/logo.jpg" alt="logo" style="width: 40px; height:40px;vertical-align: -15px; margin: 5px;" />
+        <img src="../assets/logo.jpg" alt="logo" style="width: 40px; height:40px;vertical-align: -15px; margin: 5px; border-radius: 50%;" />
         <span>南理音乐后台管理系统</span>
         <span class="current">
           <el-tag v-if="type == 'root'" type="danger">超级管理员：{{name}}</el-tag>

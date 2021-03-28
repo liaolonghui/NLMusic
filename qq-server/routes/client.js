@@ -1,11 +1,22 @@
+const { query } = require('express');
+
 module.exports = app => {
   const router = require('express').Router();
   const Album = require('../models/Album');
   const Music = require('../models/Music');
+  const Style = require('../models/Style');
 
   // albums
   router.get('/albums', async (req, res) => {
-    const model = await Album.find().sort({time: -1}).limit(10);
+    // 先从style中查出对应id
+    let queryObj = {}
+    if ( req.query.style !== '推荐' ) {
+      const {_id} = await Style.findOne({
+        "name": { $regex: req.query.style }
+      })
+      queryObj.style = _id
+    }
+    const model = await Album.find(queryObj).sort({time: -1}).limit(10);
     res.send(model);
   });
   router.get('/album/:id', async (req, res) => {

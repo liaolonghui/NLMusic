@@ -285,15 +285,15 @@ module.exports = app => {
     // 通过前端发送来的token进行校验
     const token = String(req.headers.authorization || '');
     if (!token) {
-      return res.status(401).send({message: '请在登录后1进行操作'});  // 没有token
+      return res.status(401).send({message: '请在登录后进行操作'});  // 没有token
     }
     const { id } = jwt.verify(token, app.get('secret'));  // 获取到加密前的对象
     if (!id) {
-      return res.status(401).send({message: '请在登录后2进行操作'});  // token无效
+      return res.status(401).send({message: '请在登录后进行操作'});  // token无效
     }
     req.user = await Admin.findById(id);
     if (!req.user) {
-      return res.status(401).send({message: '请在登录后3进行操作'});
+      return res.status(401).send({message: '请在登录后进行操作'});
     }
     await next();
   }

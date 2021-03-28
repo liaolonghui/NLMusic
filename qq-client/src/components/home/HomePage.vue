@@ -3,6 +3,13 @@
     <!-- album -->
     <section class="home-album line-gra">
       <h2>专辑推荐</h2>
+      <ul class="choseStyle" @click="choseStyle">
+        <li class="active">推荐</li>
+        <li>POP流行</li>
+        <li>轻音乐</li>
+        <li>电子音乐</li>
+        <li>SOUNDTRACK原声</li>
+      </ul>
       <div class="album-container">
         <ul class="album-items" :style="{'left': albumLeft+'px'}">
           <li v-for="item in albumData" :key="item._id" @click="$router.push(`/home/album/${item._id}`)">
@@ -40,6 +47,10 @@
     <section class="line-gra" style="height: 200px;">
       <h2>....</h2>
     </section>
+    <!-- footer -->
+    <footer>
+      footer
+    </footer>
   </div>
 </template>
 
@@ -58,9 +69,24 @@ export default {
       const res = await this.$http.get('musics')
       this.musicData = res.data
     },
+    // 切换专辑风格
+    choseStyle (e) {
+      const lis = e.currentTarget.children
+      for (let i = 0; i < lis.length; i++) {
+        if (lis[i] === e.target) {
+          lis[i].classList.add('active')
+          this.getAlbums(lis[i].innerHTML)
+        } else {
+          lis[i].classList.remove('active')
+        }
+      }
+    },
     // 获取album数据
-    async getAlbums () {
-      const res = await this.$http.get('albums')
+    async getAlbums (style) {
+      style = style || '推荐'
+      const res = await this.$http.get('albums', {
+        params: { style }
+      })
       this.albumData = res.data
     },
     // album按钮事件
@@ -98,7 +124,7 @@ export default {
   .home-album>h2 {
     text-align: center;
     display: block;
-    padding: 50px 0;
+    padding: 40px 0 20px 0;
     font-size: 30px;
     letter-spacing: 10px;
   }
@@ -203,6 +229,21 @@ export default {
   .home-album>span#gt {
     right: 0;
   }
+  /* choseAlbumStyle */
+  .choseStyle {
+    height: 30px;
+    width: 550px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+  .choseStyle>li {
+    float: left;
+    margin: 0 15px 0 15px;
+    cursor: pointer;
+  }
+  .choseStyle>li.active {
+    color: #42b983;
+  }
   /* music */
   .home-music {
     height: 550px;
@@ -229,6 +270,7 @@ export default {
   }
   .music-item>img {
     width: 25%;
+    cursor: pointer;
   }
   .music-item>aside {
     flex: 1;
