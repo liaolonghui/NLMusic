@@ -321,7 +321,7 @@ export default {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    animation: rotateAnimation 10s linear infinite;
+    animation: rotateAnimation 15s linear infinite;
   }
   .bottom-album>img.albumImg.pause {
     animation-play-state: paused;

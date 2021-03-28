@@ -1,5 +1,6 @@
 <template>
   <div class="home-page">
+    <!-- album -->
     <section class="home-album line-gra">
       <h2>专辑推荐</h2>
       <div class="album-container">
@@ -21,7 +22,22 @@
       <span id="lt" @click="lt">&lt;</span>
       <span id="gt" @click="gt">&gt;</span>
     </section>
-    <section class="line-gra">
+    <!-- music -->
+    <section class="home-music line-gra">
+      <h2>歌曲推荐</h2>
+      <article class="music-container">
+        <figure v-for="music in musicData" :key="music._id" class="music-item">
+          <img :src="music.album.img" alt="albumImg">
+          <aside>
+            <p @click="$router.push(`/home/album/${music.album._id}`)">专辑：{{ music.album.name }}</p>
+            <p>音乐：{{ music.name }}</p>
+            <p>歌手：{{ music.singer.name }}</p>
+          </aside>
+        </figure>
+      </article>
+    </section>
+    <!-- 精彩推荐 -->
+    <section class="line-gra" style="height: 200px;">
       <h2>....</h2>
     </section>
   </div>
@@ -32,15 +48,20 @@ export default {
   data () {
     return {
       albumLeft: 0,
-      albumData: []
+      albumData: [], // 专辑数据
+      musicData: [] // 歌曲数据
     }
   },
   methods: {
+    // 获取歌曲数据
+    async getMusics () {
+      const res = await this.$http.get('musics')
+      this.musicData = res.data
+    },
     // 获取album数据
     async getAlbums () {
       const res = await this.$http.get('albums')
       this.albumData = res.data
-      console.log(this.albumData)
     },
     // album按钮事件
     goAlbum1 () {
@@ -64,11 +85,13 @@ export default {
   },
   created () {
     this.getAlbums()
+    this.getMusics()
   }
 }
 </script>
 
 <style>
+  /* album */
   .home-album {
     height: 470px;
   }
@@ -147,24 +170,29 @@ export default {
     display: block;
     width: 100%;
     cursor: pointer;
-    transition: width 0.2s ease-in;
+    transition: transform 0.3s ease-in;
   }
   .album-items>li:hover img {
-    width: 110%;
+    transform: scale(1.1);
     opacity: 0.8;
   }
   .home-album>span {
-    display: block;
-    width: 80px;
-    height: 100px;
     background-color: whitesmoke;
-    font-size: 50px;
+    display: block;
+    width: 0;
+    height: 100px;
+    font-size: 0;
+    transition: all .3s linear;
     line-height: 100px;
     text-align: center;
     z-index: 666;
     position: absolute;
     top: 340px;
     cursor: pointer;
+  }
+  .home-album:hover>span {
+    width: 80px;
+    font-size: 50px;
   }
   .home-album>span:hover {
     background-color: #ccc;
@@ -174,5 +202,41 @@ export default {
   }
   .home-album>span#gt {
     right: 0;
+  }
+  /* music */
+  .home-music {
+    height: 550px;
+  }
+  .home-music>h2 {
+    display: block;
+    text-align: center;
+    font-size: 30px;
+    letter-spacing: 10px;
+    padding: 30px 0 20px 0;
+  }
+  .music-container {
+    height: 300px;
+    width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .music-item {
+    height: 33.33%;
+    width: 33.33%;
+    margin: 10px 0;
+    display: flex;
+  }
+  .music-item>img {
+    width: 25%;
+  }
+  .music-item>aside {
+    flex: 1;
+    margin: 10px 0 0 20px;
+    font-size: 15px;
+  }
+  .music-item>aside>p:first-child {
+    color: #42b983;
+    cursor: pointer;
   }
 </style>
