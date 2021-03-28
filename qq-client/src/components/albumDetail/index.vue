@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="albumDetail">
     <main class="albumList">
       <section class="albumDes">
         <img :src="albumList[0].album.img" alt="logo" width="250">
@@ -33,12 +33,17 @@
       </table>
     </main>
     <!-- 播放栏 -->
-    <footer class="playRow" v-if="musicId">
+    <footer class="playRow" :class="{ top: scalePlay }" v-if="musicId">
       <p><b>{{ currentMusic.name }}</b><small> - {{ currentMusic.singer }}</small></p>
       <p>{{ currentMusic.time }} / {{ currentTime }}</p>
-      <i @click="playOrPause" :class="{ play: playing }"></i>
+      <i @click="playOrPause" class="pause" :class="{ play: playing }"></i>
+      <i class="toTop" :class="{ toBottom: scalePlay }" @click="scaleChange"></i>
       <label>音量：<input type="text" v-model="volume" ></label>
       <progress @mousedown="changeProgress" :value="nowCurrentTime" min="0" :max="currentMusic.nowTime"></progress>
+      <figure v-if="scalePlay" class="bottom-album" @click="playOrPause">
+        <img class="play-bar" :class="{ play: playing }" src="@/assets/imgs/play-bar.png" />
+        <img class="albumImg" :class="{ pause: !playing }" :src="albumList[0].album.img" alt="album" />
+      </figure>
     </footer>
   </div>
 </template>
@@ -69,10 +74,15 @@ export default {
       },
       currentTime: '0:0', // 当前音乐已经播放时长
       nowCurrentTime: 0, // 未经处理的当前已播放
-      volume: 0 // 音量
+      volume: 0, // 音量
+      scalePlay: false // 是否放大播放栏
     }
   },
   methods: {
+    // 点击top或者bottom时
+    scaleChange () {
+      this.scalePlay = !this.scalePlay
+    },
     // changeProgress
     changeProgress (e) {
       const rate = e.clientX / window.innerWidth
@@ -158,6 +168,9 @@ export default {
 </script>
 
 <style>
+  .albumDetail {
+    margin-bottom: 100px;
+  }
   .albumList {
     width: 1150px;
     margin: 0 auto;
@@ -210,27 +223,34 @@ export default {
     bottom: 0;
     width: 100%;
     height: 70px;
-    background-color: #42b983;
+    background-color: #242424;
     padding-top: 15px;
     line-height: 20px;
+    color: #fafafa;
+    transition: height .3s ease-in;
+  }
+  .playRow.top {
+    height: 100%;
   }
   .playRow>p {
     padding-left: 50px;
   }
-  .playRow>i {
-    background-image: url('../../assets/imgs/cover.png');
+  .playRow>i.pause {
+    background-color: #fff;
+    background-image: url('../../assets/imgs/play.png');
     background-size: contain;
     border-radius: 50%;
     width: 40px;
     height: 40px;
     position: absolute;
+    z-index: 66;
     left: 50%;
     margin-left: -20px;
     margin-top: -40px;
     cursor: pointer;
   }
-  i.play {
-    background-image: url(../../assets/imgs/play.jpg) !important;
+  .playRow>i.play {
+    background-image: url(../../assets/imgs/pause.png);
   }
   .playRow>progress {
     width: 100%;
@@ -241,11 +261,69 @@ export default {
   }
   .playRow>label {
     position: absolute;
-    right: 100px;
+    right: 200px;
     top: 25px;
     width: 100px;
   }
   .playRow>label>input {
     width: 30px;
+  }
+  /* totop tobottom */
+  i.toTop {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 50px;
+    top: 20px;
+    background-image: url(../../assets/imgs/top.png);
+    background-size: contain;
+    background-color: #242424;
+    color: white;
+  }
+  i.toBottom {
+    background-image: url(../../assets/imgs/bottom.png);
+  }
+  /* bottom-album */
+  .bottom-album {
+    position: relative;
+    box-sizing: border-box;
+    width: 430px;
+    height: 430px;
+    padding: 50px;
+    margin: 100px auto 0 auto;
+    background-color: #000;
+    border: 15px solid #bbb;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .bottom-album>img.play-bar {
+    width: 150px;
+    position: absolute;
+    top: -130px;
+    left: 50%;
+    margin-left: -10px;
+    transform: rotate(-30deg) translate(60px, -30px);
+    transition: all .3s ease-in;
+  }
+  .bottom-album>img.play {
+    transform: rotate(0) translate(0, 0);
+  }
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(0)
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .bottom-album>img.albumImg {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    animation: rotateAnimation 10s linear infinite;
+  }
+  .bottom-album>img.albumImg.pause {
+    animation-play-state: paused;
   }
 </style>
