@@ -34,13 +34,13 @@
       <h2>歌曲推荐</h2>
       <article class="music-container">
         <figure v-for="music in musicData" :key="music._id" class="music-item">
-          <div class="albumImg">
-            <img :src="music.album.img" alt="albumImg" @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">
+          <div class="albumImg" @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">
+            <img :src="music.album.img" alt="albumImg">
             <i class="music-cover"></i>
           </div>
           <aside>
             <p @click="$router.push(`/home/album/${music.album._id}`)">专辑：{{ music.album.name }}</p>
-            <p>音乐：{{ music.name }}</p>
+            <p @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">音乐：{{ music.name }}</p>
             <p>歌手：{{ music.singer.name }}</p>
           </aside>
         </figure>
@@ -310,7 +310,10 @@ export default {
     margin: 10px 0 0 20px;
     font-size: 15px;
   }
-  .music-item>aside>p:first-child {
+  .music-item p:first-child {
+    color: #00A1D6;
+  }
+  .music-item>aside>p:hover {
     color: #42b983;
     cursor: pointer;
   }
