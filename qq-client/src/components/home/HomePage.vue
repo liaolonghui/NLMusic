@@ -34,7 +34,10 @@
       <h2>歌曲推荐</h2>
       <article class="music-container">
         <figure v-for="music in musicData" :key="music._id" class="music-item">
-          <img :src="music.album.img" alt="albumImg">
+          <div class="albumImg">
+            <img :src="music.album.img" alt="albumImg" @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">
+            <i class="music-cover"></i>
+          </div>
           <aside>
             <p @click="$router.push(`/home/album/${music.album._id}`)">专辑：{{ music.album.name }}</p>
             <p>音乐：{{ music.name }}</p>
@@ -47,10 +50,6 @@
     <section class="line-gra" style="height: 200px;">
       <h2>....</h2>
     </section>
-    <!-- footer -->
-    <footer>
-      footer
-    </footer>
   </div>
 </template>
 
@@ -159,6 +158,7 @@ export default {
     width: 200%;
     position: absolute;
     transition: left 0.5s linear;
+    transition: left 0.5s linear;
   }
   .album-items>li {
     float: left;
@@ -178,8 +178,9 @@ export default {
     top: 65px;
     left: 80px;
     transform: scale(0.7);
-    transition-property: opacity transform;
-    transition-duration: 0.5s;
+    transition: all 0.3s ease-in;
+    -webkit-transition: all 0.3s ease-in;
+    cursor: pointer;
   }
   .album-items>li:hover>i {
     display: block;
@@ -197,6 +198,7 @@ export default {
     width: 100%;
     cursor: pointer;
     transition: transform 0.3s ease-in;
+    -webkit-transition: transform 0.3s ease-in ;
   }
   .album-items>li:hover img {
     transform: scale(1.1);
@@ -209,6 +211,7 @@ export default {
     height: 100px;
     font-size: 0;
     transition: all .3s linear;
+    -webkit-transition: all .3s linear;
     line-height: 100px;
     text-align: center;
     z-index: 666;
@@ -268,9 +271,39 @@ export default {
     margin: 10px 0;
     display: flex;
   }
-  .music-item>img {
+  .music-item>.albumImg {
     width: 25%;
+    overflow: hidden;
     cursor: pointer;
+    position: relative;
+  }
+  .albumImg>img {
+    width: 100%;
+    transition: all .3s ease;
+    -webkit-transition: all 0.3s ease;
+  }
+  .albumImg:hover>img {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  i.music-cover {
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    background-image: url(../../assets/imgs/cover.png);
+    background-size: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+  }
+  .albumImg:hover>.music-cover {
+    opacity: 1;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
   }
   .music-item>aside {
     flex: 1;
