@@ -311,7 +311,7 @@ export default {
     font-size: 15px;
   }
   .music-item p:first-child {
-    color: #00A1D6;
+    color: #00A1D6 !important;
   }
   .music-item>aside>p:hover {
     color: #42b983;

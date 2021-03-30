@@ -29,6 +29,16 @@ module.exports = app => {
     items[0].album.style = style;
     res.send(items)
   })
+  // comment
+  router.post('/addComment/:id', async (req, res) => {
+    const model = await Album.findByIdAndUpdate(req.params.id, {
+      $set: {
+        "comments": req.body.comments
+      }
+    })
+    res.status(201).send(model)
+  })
+
 
   // musics
   router.get('/musics', async (req, res) => {

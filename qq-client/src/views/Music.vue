@@ -157,15 +157,24 @@ export default {
     width: 30px;
   }
   .nowMusic>.progress {
+    background-color: #42b983;
     width: 100%;
-    height: 8px;
+    height: 5px;
     position: absolute;
     top: -2px;
     left: 0;
     cursor: pointer;
   }
+  .progress::-webkit-progress-bar {
+    background: #ededed;
+    border-radius: 8px;
+  }
+  .progress::-webkit-progress-value {
+    background: #42b983;
+    border-radius: 8px;
+  }
   .nowMusic>aside {
-    margin: 10px 0 0 20px;
+    margin: 12px 0 0 50px;
   }
   .nowMusic p:nth-child(2) {
     font-size: 12px;

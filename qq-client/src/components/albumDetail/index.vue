@@ -7,7 +7,7 @@
           <h2>专辑名：{{ albumList[0].album.name }}</h2>
           <p style="color: #42b983;">歌手：{{ albumList[0].singer.name }}</p>
           <p style="color: #409EFF;">流派：{{ albumList[0].album.style.name }}</p>
-          <p style="color: #B52257;">流派描述：{{ albumList[0].album.style.description }}</p>
+          <p>流派描述：{{ albumList[0].album.style.description }}</p>
           <p style="color: #FFDC00;">唱片公司：{{ albumList[0].album.company }}</p>
         </aside>
       </section>
@@ -31,6 +31,21 @@
           </td>
         </tr>
       </table>
+      <!-- 评论 -->
+      <section class="comment">
+        <h3>评论</h3>
+        <article>
+          <textarea @keydown.enter="submitComment" name="comment" ref="comment" cols="100" rows="2"></textarea>
+          <button @click="submitComment">发送</button>
+          <span v-if="error" style="color: red;">{{ error }}</span>
+        </article>
+        <h3 v-if="albumList[0].album.comments">评论详情({{albumList[0].album.comments.length}})</h3>
+        <ul v-if="albumList[0].album.comments">
+          <li v-for="comment in albumList[0].album.comments" :key="comment._id">
+            {{ comment }}
+          </li>
+        </ul>
+      </section>
     </main>
   </div>
 </template>
@@ -44,15 +59,35 @@ export default {
     return {
       albumList: [{ // 每一首歌都有自己的所属专辑，歌手，以及歌曲内容
         album: {
-          style: {}
+          style: {},
+          comments: [] // 评论
         },
         singer: {},
         music: [{}]
       }],
-      musicsTime: {} // 保存所有音乐时长
+      musicsTime: {}, // 保存所有音乐时长
+      error: '' // 错误信息
     }
   },
   methods: {
+    // 发评论
+    async submitComment () {
+      if (this.$refs.comment.value.trim()) {
+        const arr = this.albumList[0].album.comments || []
+        const res = await this.$http.post(`addComment/${this.albumList[0].album._id}`, {
+          comments: arr.concat(this.$refs.comment.value)
+        })
+        if (res.status === 201) { // 请求成功就直接把数组赋值给评论区
+          this.albumList[0].album.comments = arr.concat(this.$refs.comment.value)
+          this.$refs.comment.value = ''
+          this.error = ''
+        } else {
+          this.error = '评论发送失败！'
+        }
+      } else {
+        this.error = '评论为空不能发送'
+      }
+    },
     // 获取所有音乐的时长
     audioCanPlay (id) {
       const musicDom = this.$refs[id]
@@ -125,5 +160,56 @@ export default {
   }
   .albumTable>tr>td:first-child:hover>i {
     display: block;
+  }
+  /* comment */
+  .comment {
+    margin: 50px 0 0 0;
+  }
+  .comment>h3 {
+    padding: 15px 0 20px 0;
+    border-top: 1px solid #aaa;
+    font-size: 28px;
+    letter-spacing: 5px;
+  }
+  .comment>h3:nth-of-type(2) {
+    font-size: 18px;
+    border-bottom: 1px solid #42b983;
+  }
+  .comment li {
+    padding: 15px 0 15px 10px;
+    border-bottom: 1px solid #42b983;
+    height: 70px;
+    line-height: 20px;
+    font-size: 15px;
+    color: slategrey;
+    list-style-type: decimal;
+  }
+  .comment textarea {
+    padding: 1em;
+  }
+  .comment button {
+    display: block;
+    margin-bottom: 20px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #42b983;
+    color: white;
+    outline: none;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .comment button:hover {
+    box-shadow: 0 0 20px #888 inset;
+  }
+  .comment>article {
+    position: relative;
+  }
+  .comment>article>span {
+    position: absolute;
+    left: 130px;
+    bottom: 5px;
+    font-size: 10px;
   }
 </style>
