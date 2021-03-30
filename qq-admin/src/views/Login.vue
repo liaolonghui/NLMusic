@@ -4,10 +4,10 @@
       <img src="../assets/logo.jpg" alt="logo">
       <el-form :model="userForm" :rules="rules" ref="userForm" label-width="70px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="userForm.username"></el-input>
+          <el-input prefix-icon="el-icon-user-solid" v-model="userForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="userForm.password" type="password"></el-input>
+          <el-input prefix-icon="el-icon-question" v-model="userForm.password" type="password"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm()">登录</el-button>
