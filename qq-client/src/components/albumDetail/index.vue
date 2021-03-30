@@ -39,7 +39,7 @@
           <button @click="submitComment">发送</button>
           <span v-if="error" style="color: red;">{{ error }}</span>
         </article>
-        <h3 v-if="albumList[0].album.comments">评论详情({{albumList[0].album.comments.length}})</h3>
+        <h3>评论详情({{albumList[0].album.comments.length}})</h3>
         <ul v-if="albumList[0].album.comments">
           <li v-for="comment in albumList[0].album.comments" :key="comment._id">
             {{ comment }}
