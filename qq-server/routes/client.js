@@ -7,9 +7,20 @@ module.exports = app => {
   const Style = require('../models/Style');
 
   // albums
-  // 获取全部专辑
+  // 获取专辑
   router.get('/albumList', async (req, res) => {
-    const items = await Album.find()
+    let searchObj = null; // 搜索
+    let options = null;   // populate关联查询
+    const name = req.query.name;
+    if (name) {
+      searchObj = {
+        "name": { $regex: name, $options: 'i' }
+      };
+      options = {
+        populate: "singer style"
+      };
+    }
+    const items = await Album.find(searchObj).setOptions(options)
     res.send(items)
   })
   // 获取十个指定类型专辑

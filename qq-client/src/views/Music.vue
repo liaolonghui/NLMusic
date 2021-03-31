@@ -2,12 +2,12 @@
   <div class="music">
     <nav>
       <router-link to="/home/">首页</router-link>
+      <router-link to="/home/album">数字专辑</router-link>
       <router-link to="/home/singer">歌手</router-link>
       <router-link to="/home/newMusic">新碟</router-link>
       <router-link to="/home/top">排行榜</router-link>
       <router-link to="/home/sort">分类榜单</router-link>
       <router-link to="/home/tv">电台</router-link>
-      <router-link to="/home/album">数字专辑</router-link>
     </nav>
     <router-view @changeMusic="changeMusic"></router-view>
     <!-- footer 播放栏 -->
@@ -139,6 +139,7 @@ export default {
     background-color: #242424;
     width: 100%;
     height: 70px;
+    z-index: 999;
     position: fixed;
     bottom: 0;
     color: white;

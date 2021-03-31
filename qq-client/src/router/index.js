@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import MyMusic from '../views/MyMusic.vue'
 import Music from '../views/Music.vue'
 import Login from '../views/Login.vue'
+import Search from '../views/Search.vue'
 import Download from '../components/other/Download.vue'
 import Singer from '../components/home/Singer.vue'
 import NewMusic from '../components/home/NewMusic.vue'
@@ -40,6 +41,7 @@ const routes = [
         ]
       },
       // ...
+      { path: '/search/:query', name: 'Search', component: Search, props: true },
       { path: '/user', name: 'MyMusic', component: MyMusic },
       { path: '/download', name: 'Download', component: Download },
       { path: '/open', name: 'open', component: Download },

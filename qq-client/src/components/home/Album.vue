@@ -8,7 +8,7 @@
           :ref="i"
           :class="{
             active: i === index,
-            near: i + 1 === index || i - 1 === index
+            near: isNear(i)
           }"
         >
           <img
@@ -27,7 +27,7 @@
       </ul>
     </nav>
     <section>
-      <h2 align="center">数字专辑</h2>
+      <h2 align="center" style="padding-top: 20px;">数字专辑</h2>
       <article class="albums">
         <figure v-for="album in albumList" :key="album._id" @click="$router.push(`/home/album/${album._id}`)">
           <img :src="album.img" alt="albumImg">
@@ -49,6 +49,28 @@ export default {
     }
   },
   methods: {
+    // 判断是不是near
+    isNear (i) {
+      if (this.index === 9) {
+        if (i === 0 || i === 8) {
+          return true
+        } else {
+          return false
+        }
+      } else if (this.index === 0) {
+        if (i === 9 || i === 1) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        if (i + 1 === this.index || i - 1 === this.index) {
+          return true
+        } else {
+          return false
+        }
+      }
+    },
     // getAlbumList
     async getAlbumList () {
       const res = await this.$http.get('albumList')
@@ -105,16 +127,13 @@ export default {
         this.$refs[9][0].style.transform = 'translateX(-50px) scale(0.8)'
         this.$refs[1][0].style.transform = 'translateX(550px) scale(0.8)'
       } else {
-        this.$refs[this.index - 1][0].style.transform =
-          'translateX(-50px) scale(0.8)'
-        this.$refs[this.index + 1][0].style.transform =
-          'translateX(550px) scale(0.8)'
+        this.$refs[this.index - 1][0].style.transform = 'translateX(-50px) scale(0.8)'
+        this.$refs[this.index + 1][0].style.transform = 'translateX(550px) scale(0.8)'
       }
       // 处理远邻
       for (let i = 1; i <= 3; i++) {
         if (this.index - 1 - i >= 0) {
-          this.$refs[this.index - 1 - i][0].style.transform =
-            'translateX(-550px) scale(0.8)'
+          this.$refs[this.index - 1 - i][0].style.transform = 'translateX(-550px) scale(0.8)'
         } else {
           const num = 10 + this.index - 1 - i
           this.$refs[num][0].style.transform = 'translateX(-550px) scale(0.8)'
@@ -122,10 +141,9 @@ export default {
       }
       for (let j = 1; j <= 4; j++) {
         if (this.index + 1 + j <= 9) {
-          this.$refs[this.index + 1 + j][0].style.transform =
-            'translateX(1050px) scale(0.8)'
+          this.$refs[this.index + 1 + j][0].style.transform = 'translateX(1050px) scale(0.8)'
         } else {
-          const num = this.index + 1 + j - 9
+          const num = this.index + 1 + j - 10
           this.$refs[num][0].style.transform = 'translateX(1050px) scale(0.8)'
         }
       }
@@ -247,7 +265,7 @@ article.albums {
   flex-wrap: wrap;
 }
 article.albums>figure {
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   cursor: pointer;
   transition: box-shadow 0.3s ease;

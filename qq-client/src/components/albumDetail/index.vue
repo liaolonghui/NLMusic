@@ -106,6 +106,8 @@ export default {
   },
   created () {
     this.getAlbumList()
+    // 一进来直接让页面处于顶部
+    document.documentElement.scrollTop = 0
   }
 }
 </script>

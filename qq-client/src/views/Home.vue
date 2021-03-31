@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <header>
-      <span class="school">
+      <span class="school" @click="$router.push('/')">
         <img src="@/assets/imgs/logo.jpg" alt="logo" width="50px">
         <span>南理音乐</span>
       </span>
@@ -21,7 +21,7 @@
         <router-link to="/vip">VIP</router-link>
       </nav>
       <form class="search">
-        <input type="text" placeholder="搜索音乐、歌单、用户">
+        <input type="text" placeholder="搜索音乐、专辑、歌手、用户" v-model="query" @keydown.enter="search" :disabled="isSearch">
       </form>
       <button class="btn" @click="$router.push('/login')">
         登录
@@ -35,9 +35,26 @@
 export default {
   name: 'Home',
   components: {},
+  data () {
+    return {
+      query: '' // 查询参数
+    }
+  },
+  methods: {
+    // 搜索
+    search () {
+      this.$router.push(`/search/${this.query}`)
+      this.query = ''
+    }
+  },
   computed: {
+    // path是否以/home开头
     HomeActive () {
       return this.$route.path.indexOf('/home') !== -1
+    },
+    // 是否处于搜索页
+    isSearch () {
+      return this.$route.path.indexOf('/search') !== -1
     }
   }
 }
