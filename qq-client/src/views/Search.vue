@@ -66,13 +66,13 @@ export default {
   min-height: 100%;
 }
 .searchData > .search-input {
-  height: 150px;
+  height: 225px;
   width: 100%;
   background-image: url(../assets/imgs/searchBG.jpg);
 }
 .search-input > input {
   position: absolute;
-  top: 125px;
+  top: 155px;
   left: 50%;
   margin-left: -250px;
   width: 500px;
