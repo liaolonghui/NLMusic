@@ -7,6 +7,12 @@ module.exports = app => {
   const Style = require('../models/Style');
 
   // albums
+  // 获取全部专辑
+  router.get('/albumList', async (req, res) => {
+    const items = await Album.find()
+    res.send(items)
+  })
+  // 获取十个指定类型专辑
   router.get('/albums', async (req, res) => {
     // 先从style中查出对应id
     let queryObj = {}
@@ -19,6 +25,7 @@ module.exports = app => {
     const model = await Album.find(queryObj).sort({time: -1}).limit(10);
     res.send(model);
   });
+  // 获取专辑中所有歌曲
   router.get('/album/:id', async (req, res) => {
     // 获取专辑所含歌曲信息
     const items = await Music.find({

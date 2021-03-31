@@ -1,7 +1,7 @@
 <template>
   <div class="album-list">
     <nav class="album-nav">
-      <ul>
+      <ul @mouseenter="enterTop" @mouseleave="leaveTop">
         <li
           v-for="(img, i) in topImgs"
           :key="i"
@@ -17,8 +17,25 @@
             @click="$router.push('/home/album/605944d60cad5329e075f0a2')"
           />
         </li>
+        <aside>
+          <span @click="toLeft" class="lt">&lt;</span>
+          <span @click="toRight" class="gt">&gt;</span>
+        </aside>
+        <ol>
+          <li v-for="(img, i) in topImgs" :key="i" :ref="'li'+i" @mouseenter="changeTopImgs(i)"></li>
+        </ol>
       </ul>
     </nav>
+    <section>
+      <h2 align="center">数字专辑</h2>
+      <article class="albums">
+        <figure v-for="album in albumList" :key="album._id" @click="$router.push(`/home/album/${album._id}`)">
+          <img :src="album.img" alt="albumImg">
+          <p>专辑：{{ album.name }}</p>
+          <p>唱片公司：{{ album.company }}</p>
+        </figure>
+      </article>
+    </section>
   </div>
 </template>
 
@@ -27,10 +44,42 @@ export default {
   data () {
     return {
       topImgs: [], // 图片
-      index: 0 // 记录当前位置
+      index: 0, // 记录当前位置
+      albumList: [] // 全部专辑信息
     }
   },
   methods: {
+    // getAlbumList
+    async getAlbumList () {
+      const res = await this.$http.get('albumList')
+      if (res.status === 200) {
+        this.albumList = res.data
+      }
+    },
+    // 左右切换
+    toLeft () {
+      this.index--
+      this.topImgsChange()
+    },
+    toRight () {
+      this.index++
+      this.topImgsChange()
+    },
+    // 清除定时器
+    enterTop () {
+      clearInterval(this.topImgTimer)
+    },
+    leaveTop () {
+      this.topImgTimer = setInterval(() => {
+        this.index++
+        this.topImgsChange()
+      }, 2500)
+    },
+    // 标记
+    changeTopImgs (i) {
+      this.index = i
+      this.topImgsChange()
+    },
     // 轮播动画
     topImgsChange () {
       if (this.index > 9) {
@@ -40,36 +89,44 @@ export default {
       }
       // 处理当前
       this.$refs[this.index][0].style.transform = 'translateX(250px) scale(1)'
+      // 让对应标记变色
+      for (let j = 0; j < 10; j++) {
+        if (j !== this.index) {
+          this.$refs['li' + j][0].classList.remove('active')
+        } else {
+          this.$refs['li' + j][0].classList.add('active')
+        }
+      }
       // 处理近邻
       if (this.index === 9) {
-        this.$refs[8][0].style.transform = 'translateX(-35px) scale(0.85)'
-        this.$refs[0][0].style.transform = 'translateX(535px) scale(0.85)'
+        this.$refs[8][0].style.transform = 'translateX(-50px) scale(0.8)'
+        this.$refs[0][0].style.transform = 'translateX(550px) scale(0.8)'
       } else if (this.index === 0) {
-        this.$refs[9][0].style.transform = 'translateX(-35px) scale(0.85)'
-        this.$refs[1][0].style.transform = 'translateX(535px) scale(0.85)'
+        this.$refs[9][0].style.transform = 'translateX(-50px) scale(0.8)'
+        this.$refs[1][0].style.transform = 'translateX(550px) scale(0.8)'
       } else {
         this.$refs[this.index - 1][0].style.transform =
-          'translateX(-35px) scale(0.85)'
+          'translateX(-50px) scale(0.8)'
         this.$refs[this.index + 1][0].style.transform =
-          'translateX(535px) scale(0.85)'
+          'translateX(550px) scale(0.8)'
       }
       // 处理远邻
       for (let i = 1; i <= 3; i++) {
         if (this.index - 1 - i >= 0) {
           this.$refs[this.index - 1 - i][0].style.transform =
-            'translateX(-500px) scale(0.85)'
+            'translateX(-550px) scale(0.8)'
         } else {
           const num = 10 + this.index - 1 - i
-          this.$refs[num][0].style.transform = 'translateX(-500px) scale(0.85)'
+          this.$refs[num][0].style.transform = 'translateX(-550px) scale(0.8)'
         }
       }
       for (let j = 1; j <= 4; j++) {
         if (this.index + 1 + j <= 9) {
           this.$refs[this.index + 1 + j][0].style.transform =
-            'translateX(1000px) scale(0.85)'
+            'translateX(1050px) scale(0.8)'
         } else {
           const num = this.index + 1 + j - 9
-          this.$refs[num][0].style.transform = 'translateX(1000px) scale(0.85)'
+          this.$refs[num][0].style.transform = 'translateX(1050px) scale(0.8)'
         }
       }
     }
@@ -86,13 +143,15 @@ export default {
         return img
       }
     })
+    // 获取全部专辑
+    this.getAlbumList()
   },
   mounted () {
     this.topImgsChange()
     this.topImgTimer = setInterval(() => {
       this.index++
       this.topImgsChange()
-    }, 3000)
+    }, 2500)
   },
   destroyed () {
     clearInterval(this.topImgTimer)
@@ -101,19 +160,23 @@ export default {
 </script>
 
 <style>
-.album-nav {
-  width: 1000px;
-  height: 220px;
+.album-list {
+  width: 1100px;
   margin: 30px auto;
+}
+/* nav */
+.album-nav {
+  width: 100%;
+  height: 270px;
   overflow: hidden;
 }
 .album-nav > ul {
   height: 100%;
   position: relative;
 }
-.album-nav li {
+.album-nav > ul > li {
   position: absolute;
-  transition: all 0.5s ease-in;
+  transition: all 0.5s linear;
 }
 .album-nav li.active {
   z-index: 2;
@@ -123,8 +186,82 @@ export default {
 }
 .album-nav li > img {
   display: block;
-  width: 500px;
+  width: 600px;
   border-radius: 5px;
   cursor: pointer;
+}
+.album-nav ol {
+  overflow: hidden;
+  height: 5px;
+  width: 500px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -250px;
+}
+.album-nav ol > li {
+  float: left;
+  width: 40px;
+  height: 5px;
+  margin-left: 10px;
+  background-color: #ddd;
+  cursor: pointer;
+}
+.album-nav ol > li.active {
+  background-color: #999;
+}
+.album-nav aside span {
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 50%;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  margin-top: -25px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  opacity: 0.2;
+  transition: opacity 0.3s ease-in-out;
+}
+.album-nav:hover aside span {
+  opacity: 0.9;
+}
+.album-nav aside span.lt {
+  left: 15px;
+}
+.album-nav aside span.gt {
+  right: 15px;
+}
+/* section */
+.album-list>section {
+  margin-top: 30px;
+  background-color: #fafafa;
+}
+article.albums {
+  display: flex;
+  flex-wrap: wrap;
+}
+article.albums>figure {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+article.albums>figure:hover {
+  box-shadow: 0 0 20px #999;
+}
+article.albums>figure>img {
+  width: 250px;
+}
+article.albums>figure>p {
+  width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

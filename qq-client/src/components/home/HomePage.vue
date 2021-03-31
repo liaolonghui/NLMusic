@@ -218,6 +218,9 @@ export default {
     position: absolute;
     top: 340px;
     cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
   }
   .home-album:hover>span {
     width: 80px;
