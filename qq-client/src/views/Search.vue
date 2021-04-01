@@ -104,14 +104,17 @@ export default {
   methods: {
     // 使用本组件的参数搜索
     async viewData (e) {
-      if (e.target === e.currentTarget) return
-      this.searchType = e.target.innerText
-      const lis = e.currentTarget.children
-      for (let i = 0; i < lis.length; i++) {
-        if (lis[i] !== e.target) {
-          lis[i].classList.remove('now-type')
-        } else {
-          lis[i].classList.add('now-type')
+      // 如果e的code不是Enter，说明是通过点击li发起的请求。
+      if (e.target === e.currentTarget && e.code !== 'Enter') return
+      if (e.code !== 'Enter') {
+        this.searchType = e.target.innerText
+        const lis = e.currentTarget.children
+        for (let i = 0; i < lis.length; i++) {
+          if (lis[i] !== e.target) {
+            lis[i].classList.remove('now-type')
+          } else {
+            lis[i].classList.add('now-type')
+          }
         }
       }
       let res = null
