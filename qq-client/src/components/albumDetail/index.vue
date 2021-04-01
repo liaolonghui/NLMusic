@@ -5,7 +5,7 @@
         <img :src="albumList[0].album.img" alt="logo" width="250">
         <aside>
           <h2>专辑名：{{ albumList[0].album.name }}</h2>
-          <p style="color: #42b983;">歌手：{{ albumList[0].singer.name }}</p>
+          <p style="color: #42b983; cursor: pointer;" @click="$router.push(`/home/singer/${albumList[0].singer._id}`)">歌手：{{ albumList[0].singer.name }}</p>
           <p style="color: #409EFF;">流派：{{ albumList[0].album.style.name }}</p>
           <p>流派描述：{{ albumList[0].album.style.description }}</p>
           <p style="color: #FFDC00;">唱片公司：{{ albumList[0].album.company }}</p>

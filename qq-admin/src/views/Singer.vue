@@ -128,6 +128,18 @@
             placeholder="请输入内容"
             v-model="singerForm.description" />
         </el-form-item>
+        <el-form-item label="歌手照片" prop="img">
+          <el-upload
+            name="img"
+            class="img-uploader"
+            :action="uploadImgURL"
+            :headers="getAuth()"
+            :show-file-list="false"
+            :on-success="handleImgSuccess">
+            <img v-if="singerForm.img" :src="singerForm.img" class="img">
+            <i v-else class="el-icon-plus img-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -165,6 +177,11 @@ export default {
     }
   },
   methods: {
+    // 图片
+    handleImgSuccess(res) {
+      this.$set(this.singerForm, 'img', res) // URL.createObjectURL().... 
+      // 如果不在singerForm里面先定义好img就不是响应式了。（或者使用$set）
+    },
     // pageSize   (应该在pageSize变化时让pageNum变为1)
     handleSizeChange(val) {
       this.query.pageSize = val;

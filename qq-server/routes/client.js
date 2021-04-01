@@ -97,6 +97,10 @@ module.exports = app => {
     const items = await Singer.find(searchObj).setOptions(options)
     res.send(items)
   })
+  router.get('/singer/:id', async (req, res) => {
+    const item = await Singer.findById(req.params.id).populate('style country');
+    res.send(item);
+  })
 
 
   app.use('/client', router);

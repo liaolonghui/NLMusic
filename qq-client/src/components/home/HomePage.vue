@@ -41,7 +41,7 @@
           <aside>
             <p @click="$router.push(`/home/album/${music.album._id}`)">专辑：{{ music.album.name }}</p>
             <p @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">音乐：{{ music.name }}</p>
-            <p>歌手：{{ music.singer.name }}</p>
+            <p @click="$router.push(`/home/singer/${music.singer._id}`)">歌手：{{ music.singer.name }}</p>
           </aside>
         </figure>
       </article>

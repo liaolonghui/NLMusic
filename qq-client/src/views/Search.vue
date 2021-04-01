@@ -65,7 +65,7 @@
           <th>语种</th>
           <th>流派</th>
         </tr>
-        <tr v-for="singer in singerData" :key="singer._id">
+        <tr v-for="singer in singerData" :key="singer._id" @click="$router.push(`/home/singer/${singer._id}`)">
           <td>
             <p>{{ singer.name }}</p>
           </td>

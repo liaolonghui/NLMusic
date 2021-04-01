@@ -14,6 +14,7 @@ import TV from '../components/home/TV.vue'
 import Album from '../components/home/Album.vue'
 import HomePage from '../components/home/HomePage.vue'
 import AlbumDetail from '../components/albumDetail/index.vue'
+import SingerDetail from '../components/singerDetail/index.vue'
 
 Vue.use(VueRouter)
 
@@ -37,7 +38,8 @@ const routes = [
           { path: '/home/tv', name: 'TV', component: TV },
           { path: '/home/album', name: 'Album', component: Album },
           // ...
-          { path: '/home/album/:id', name: 'AlbumDetail', component: AlbumDetail, props: true }
+          { path: '/home/album/:id', name: 'AlbumDetail', component: AlbumDetail, props: true },
+          { path: '/home/singer/:singerID', name: 'SingerDetail', component: SingerDetail, props: true }
         ]
       },
       // ...

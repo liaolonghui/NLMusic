@@ -1,9 +1,9 @@
 <template>
   <div class="singer-list">
-    <section v-for="singer in singerList" :key="singer._id">
+    <section v-for="singer in singerList" :key="singer._id" @click="$router.push(`/home/singer/${singer._id}`)">
       <h3>{{ singer.name }}</h3>
       <p>性别：{{ singer.sex }}</p>
-      <img :src="singer.avator" alt="singer">
+      <img :src="singer.img" alt="singer">
     </section>
   </div>
 </template>
@@ -44,5 +44,16 @@ export default {
     background-color: #fff;
     text-align: center;
     line-height: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease-out;
+  }
+  .singer-list>section:hover {
+    color: #42b983;
+    box-shadow: 0 10px 10px #999;
+  }
+  .singer-list>section>img {
+    max-width: 100%;
+    max-height: 75%;
   }
 </style>

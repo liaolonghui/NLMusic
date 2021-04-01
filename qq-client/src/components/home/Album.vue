@@ -271,7 +271,8 @@ article.albums>figure {
   transition: box-shadow 0.3s ease;
 }
 article.albums>figure:hover {
-  box-shadow: 0 0 20px #999;
+  color: #42b983;
+  box-shadow: 0 10px 10px #999;
 }
 article.albums>figure>img {
   width: 250px;

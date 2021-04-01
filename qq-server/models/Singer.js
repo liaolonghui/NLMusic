@@ -6,7 +6,8 @@ const schema = new mongoose.Schema({
   sex: { type: String },
   country: { type: mongoose.SchemaTypes.ObjectId, ref: 'Country' },
   style: { type: mongoose.SchemaTypes.ObjectId, ref: 'Style' },
-  description: { type: String }
+  description: { type: String },
+  img: { type: String }
 });
 
 module.exports = mongoose.model('Singer', schema);
