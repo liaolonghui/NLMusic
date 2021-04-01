@@ -130,6 +130,7 @@ nav.header-nav a:hover {
 
 .clientDown {
   position: relative;
+  z-index: 10;
 }
 .clientDown::before {
   content: '';

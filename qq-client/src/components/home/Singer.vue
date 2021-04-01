@@ -1,5 +1,48 @@
 <template>
-  <div class="">
-    singer
+  <div class="singer-list">
+    <section v-for="singer in singerList" :key="singer._id">
+      <h3>{{ singer.name }}</h3>
+      <p>性别：{{ singer.sex }}</p>
+      <img :src="singer.avator" alt="singer">
+    </section>
   </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      singerList: []
+    }
+  },
+  methods: {
+    async getSingerList () {
+      const res = await this.$http.get('singerList')
+      this.singerList = res.data
+    }
+  },
+  created () {
+    this.getSingerList()
+  }
+}
+</script>
+
+<style>
+  .singer-list {
+    width: 1000px;
+    margin: 30px auto;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #eee;
+  }
+  .singer-list>section {
+    width: 23%;
+    height: 250px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #888;
+    background-color: #fff;
+    text-align: center;
+    line-height: 30px;
+  }
+</style>
