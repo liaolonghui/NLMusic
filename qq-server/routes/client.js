@@ -5,6 +5,7 @@ module.exports = app => {
   const Album = require('../models/Album');
   const Music = require('../models/Music');
   const Style = require('../models/Style');
+  const Singer = require('../models/Singer')
 
   // albums
   // 获取专辑
@@ -62,6 +63,39 @@ module.exports = app => {
   router.get('/musics', async (req, res) => {
     const musics = await Music.find().populate('album singer').limit(9)
     res.send(musics)
+  })
+  router.get('/musicList', async (req, res) => {
+    let searchObj = null; // 搜索
+    let options = null;   // populate关联查询
+    const name = req.query.name;
+    if (name) {
+      searchObj = {
+        "name": { $regex: name, $options: 'i' }
+      };
+      options = {
+        populate: "singer album"
+      };
+    }
+    const items = await Music.find(searchObj).setOptions(options)
+    res.send(items)
+  })
+
+
+  // singers
+  router.get('/singerList', async (req, res) => {
+    let searchObj = null; // 搜索
+    let options = null;   // populate关联查询
+    const name = req.query.name;
+    if (name) {
+      searchObj = {
+        "name": { $regex: name, $options: 'i' }
+      };
+      options = {
+        populate: "style country"
+      };
+    }
+    const items = await Singer.find(searchObj).setOptions(options)
+    res.send(items)
   })
 
 

@@ -7,10 +7,16 @@
         v-model="searchParams"
         @keydown.enter="viewData"
       />
+      <ul class="search-type" @click="viewData">
+        <li class="now-type">专辑</li>
+        <li>歌曲</li>
+        <li>歌手</li>
+      </ul>
     </header>
-    <article>
+    <!-- 专辑搜索展示 -->
+    <article v-if="searchType === '专辑'">
       <figure
-        v-for="item in searchData"
+        v-for="item in AlbumData"
         :key="item._id"
         @click="$router.push(`/home/album/${item._id}`)"
       >
@@ -24,6 +30,60 @@
         </div>
       </figure>
     </article>
+    <!-- 歌曲搜索展示 -->
+    <article v-if="searchType === '歌曲'">
+      <table class="search-table">
+        <tr>
+          <th>音乐</th>
+          <th>歌手</th>
+          <th>专辑</th>
+          <th>播放</th>
+        </tr>
+        <tr v-for="music in musicData" :key="music._id">
+          <td>
+            <p>{{ music.name }}</p>
+          </td>
+          <td>
+            <p>{{ music.singer.name }}</p>
+          </td>
+          <td>
+            <p @click="$router.push(`/home/album/${music.album._id}`)">{{ music.album.name }}</p>
+          </td>
+          <td>
+            <audio :src="music.music[0].path" controls></audio>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <!-- 歌手搜索展示 -->
+    <article v-if="searchType === '歌手'">
+      <table class="search-table singer-table">
+        <tr>
+          <th>歌手</th>
+          <th>性别</th>
+          <th>国家/地区</th>
+          <th>语种</th>
+          <th>流派</th>
+        </tr>
+        <tr v-for="singer in singerData" :key="singer._id">
+          <td>
+            <p>{{ singer.name }}</p>
+          </td>
+          <td>
+            <p>{{ singer.sex }}</p>
+          </td>
+          <td>
+            <p>{{ singer.country.country }}</p>
+          </td>
+          <td>
+            <p>{{ singer.country.lang }}</p>
+          </td>
+          <td>
+            <p>{{ singer.style.name }}</p>
+          </td>
+        </tr>
+      </table>
+    </article>
   </div>
 </template>
 
@@ -34,24 +94,50 @@ export default {
   },
   data () {
     return {
+      searchType: '专辑', // 搜索类型
       searchParams: '', // 本组件的搜索参数
-      searchData: [] // 搜索到的数据
+      AlbumData: [], // 搜索到的专辑数据
+      musicData: [], // 歌曲数据
+      singerData: []
     }
   },
   methods: {
     // 使用本组件的参数搜索
-    async viewData () {
-      const res = await this.$http.get('albumList', {
-        params: { name: this.searchParams }
-      })
-      this.searchData = res.data
+    async viewData (e) {
+      if (e.target === e.currentTarget) return
+      this.searchType = e.target.innerText
+      const lis = e.currentTarget.children
+      for (let i = 0; i < lis.length; i++) {
+        if (lis[i] !== e.target) {
+          lis[i].classList.remove('now-type')
+        } else {
+          lis[i].classList.add('now-type')
+        }
+      }
+      let res = null
+      if (this.searchType === '歌曲') {
+        res = await this.$http.get('musicList', {
+          params: { name: this.searchParams }
+        })
+        this.musicData = res.data
+      } else if (this.searchType === '歌手') {
+        res = await this.$http.get('singerList', {
+          params: { name: this.searchParams }
+        })
+        this.singerData = res.data
+      } else {
+        res = await this.$http.get('albumList', {
+          params: { name: this.searchParams }
+        })
+        this.AlbumData = res.data
+      }
     },
     // 搜索
     async search () {
       const res = await this.$http.get('albumList', {
         params: { name: this.query }
       })
-      this.searchData = res.data
+      this.AlbumData = res.data
     }
   },
   created () {
@@ -96,5 +182,40 @@ export default {
 }
 .searchData .item-description {
   padding: 5px;
+}
+.search-input>.search-type {
+  width: 200px;
+  height: 20px;
+  margin: 0 auto;
+  padding-top: 180px;
+}
+.search-type>li {
+  display: inline-block;
+  margin-right: 25px;
+  color: azure;
+  cursor: pointer;
+}
+.search-type>li.now-type {
+  color: #EEE75D;
+}
+/* table */
+.search-table {
+  margin-left: 50px;
+}
+.search-table td {
+  min-width: 300px;
+  height: 50px;
+  padding: 10px 0 10px 0;
+  border-bottom: 1px solid #42b983;
+  text-align: center;
+}
+.search-table td>p {
+  cursor: pointer;
+}
+.search-table td>p:hover {
+  color: #42b983;
+}
+.singer-table td {
+  min-width: 200px;
 }
 </style>
