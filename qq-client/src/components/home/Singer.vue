@@ -46,9 +46,10 @@ export default {
     line-height: 30px;
     overflow: hidden;
     cursor: pointer;
-    transition: box-shadow 0.3s ease-out;
+    transition: all 0.3s ease-out;
   }
   .singer-list>section:hover {
+    margin-top: 7px;
     color: #42b983;
     box-shadow: 0 10px 10px #999;
   }

@@ -265,13 +265,15 @@ article.albums {
   flex-wrap: wrap;
 }
 article.albums>figure {
+  margin-top: 10px;
   padding: 15px;
   border: 1px solid #ccc;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 article.albums>figure:hover {
   color: #42b983;
+  margin-top: 0;
   box-shadow: 0 10px 10px #999;
 }
 article.albums>figure>img {

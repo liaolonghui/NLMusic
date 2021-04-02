@@ -9,7 +9,7 @@ import Download from '../components/other/Download.vue'
 import Singer from '../components/home/Singer.vue'
 import NewMusic from '../components/home/NewMusic.vue'
 import Top from '../components/home/Top.vue'
-import Sort from '../components/home/Sort.vue'
+import MV from '../components/home/MV.vue'
 import TV from '../components/home/TV.vue'
 import Album from '../components/home/Album.vue'
 import HomePage from '../components/home/HomePage.vue'
@@ -34,7 +34,7 @@ const routes = [
           { path: '/home/singer', name: 'Singer', component: Singer },
           { path: '/home/newMusic', name: 'NewMusic', component: NewMusic },
           { path: '/home/top', name: 'Top', component: Top },
-          { path: '/home/sort', name: 'Sort', component: Sort },
+          { path: '/home/mv', name: 'MV', component: MV },
           { path: '/home/tv', name: 'TV', component: TV },
           { path: '/home/album', name: 'Album', component: Album },
           // ...

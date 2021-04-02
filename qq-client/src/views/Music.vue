@@ -6,7 +6,7 @@
       <router-link to="/home/singer">歌手</router-link>
       <router-link to="/home/newMusic">新碟</router-link>
       <router-link to="/home/top">排行榜</router-link>
-      <router-link to="/home/sort">分类榜单</router-link>
+      <router-link to="/home/mv">音乐短片MV</router-link>
       <router-link to="/home/tv">电台</router-link>
     </nav>
     <router-view @changeMusic="changeMusic"></router-view>
