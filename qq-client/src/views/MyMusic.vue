@@ -5,6 +5,7 @@
 </template>
 
 <style>
-  .my-music {
-  }
+.my-music {
+  min-height: 500px;
+}
 </style>

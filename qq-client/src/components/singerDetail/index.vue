@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="singer._id">
     <p>{{singer.name}}</p>
     <p>{{singer.sex}}</p>
     <p>{{singer.description}}</p>
@@ -7,6 +7,7 @@
     <p>{{singer.country.lang}}</p>
     <p>{{singer.style.name}}</p>
     <p>{{singer.style.description}}</p>
+    <img :src="singer.img" alt="SingerImg">
   </div>
 </template>
 
