@@ -274,6 +274,7 @@ article.albums>figure {
 article.albums>figure:hover {
   color: #42b983;
   margin-top: 0;
+  margin-bottom: 26px;
   box-shadow: 0 10px 10px #999;
 }
 article.albums>figure>img {

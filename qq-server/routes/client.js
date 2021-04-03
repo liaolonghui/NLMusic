@@ -24,6 +24,13 @@ module.exports = app => {
     const items = await Album.find(searchObj).setOptions(options)
     res.send(items)
   })
+  // 根据歌手id搜索
+  router.get('/albumList/:id', async (req, res) => {
+    const items = await Album.find({
+      singer: req.params.id
+    })
+    res.send(items)
+  })
   // 获取十个指定类型专辑
   router.get('/albums', async (req, res) => {
     // 先从style中查出对应id

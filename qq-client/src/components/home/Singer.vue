@@ -50,6 +50,7 @@ export default {
   }
   .singer-list>section:hover {
     margin-top: 7px;
+    margin-bottom: 13px;
     color: #42b983;
     box-shadow: 0 10px 10px #999;
   }
