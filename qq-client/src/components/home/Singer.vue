@@ -40,7 +40,7 @@ export default {
     height: 250px;
     margin: 10px;
     padding: 10px;
-    border: 1px solid #888;
+    border: 1px solid #bbb;
     background-color: #fff;
     text-align: center;
     line-height: 30px;

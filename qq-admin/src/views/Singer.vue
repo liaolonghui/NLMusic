@@ -156,7 +156,7 @@ export default {
   data() {
     return {
       query: {    // 分页查询参数(第几页,一页多少条数据) 以及 关键字查询参数
-        pageSize: 6,
+        pageSize: 3,
         pageNum: 1,
         key: '',
       },

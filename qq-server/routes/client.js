@@ -21,7 +21,7 @@ module.exports = app => {
         populate: "singer style"
       };
     }
-    const items = await Album.find(searchObj).setOptions(options)
+    const items = await Album.find(searchObj).setOptions(options).sort({ time: -1 });
     res.send(items)
   })
   // 根据歌手id搜索
