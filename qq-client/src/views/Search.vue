@@ -43,7 +43,7 @@
           <td>
             <p>{{ music.name }}</p>
           </td>
-          <td>
+          <td @click="$router.push(`/home/singer/${music.singer._id}`)">
             <p>{{ music.singer.name }}</p>
           </td>
           <td>
