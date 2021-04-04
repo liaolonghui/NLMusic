@@ -17,6 +17,9 @@ Vue.mixin({
     uploadMusic() {
       return 'http://localhost:8888/admin/rest/uploadMusic'
     },
+    uploadMV() {
+      return 'http://localhost:8888/admin/rest/uploadMV'
+    }
   },
   methods: {
     getAuth() { 

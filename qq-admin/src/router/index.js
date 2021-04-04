@@ -8,6 +8,7 @@ import Album from '../views/Album.vue'
 import Music from '../views/Music.vue'
 import Singer from '../views/Singer.vue'
 import Admin from '../views/Admin.vue'
+import MV from '../views/MV.vue'
 import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
@@ -25,6 +26,7 @@ const routes = [
       { path: '/music', name: 'music', component: Music },
       { path: '/singer', name: 'singer', component: Singer },
       { path: '/admin', name: 'admin', component: Admin },
+      { path: '/mv', name: 'mv', component: MV },
     ]
   },{
     path: '/login',

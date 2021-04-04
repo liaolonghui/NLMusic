@@ -11,6 +11,7 @@ module.exports = app => {
   const Album = require('../models/Album');
   const Music = require('../models/Music');
   const Admin = require('../models/Admin');
+  const MV = require('../models/MV');
 
 
   // 在增删改的时候应该检验一下管理员是否有资格
@@ -239,6 +240,61 @@ module.exports = app => {
     res.send({
       name: req.file.originalname,
       path: 'http://localhost:8888/uploadMusic/'+req.file.filename
+    });
+  });
+
+
+  // MV
+  // 增
+  router.post('/addMV', adminLevel, async (req, res) => {
+    const model = await MV.create(req.body);
+    res.send(model);
+  });
+  // 删
+  router.delete('/deleteMV/:id', adminLevel, async (req, res) => {
+    await MV.findByIdAndDelete(req.params.id);
+    res.send({
+      success: true
+    });
+  });
+  // 改
+  router.put('/updateMV/:id', adminLevel, async (req, res) => {
+    const model = await MV.findByIdAndUpdate(req.params.id, req.body);
+    res.send(model);
+  })
+  // 查(分页查询) (关键字查询)
+  router.get('/mv', async (req, res) => {
+    let key = req.query.key || '';  // 关键字
+    let searchObj = null;
+    if (key) {
+      searchObj = { "name": {$regex: key, $options:'i'} };   // 使用正则 模糊查询
+    }
+
+    let numb = parseInt(req.query.pageNum) || 1;   // 第几页
+    let size = parseInt(req.query.pageSize) || 4;  // 一页几条数据
+    numb--;
+    const sum = numb * size;  // 跳过几条数据  (页数-1)*条数
+    
+    const count = await MV.find(searchObj).countDocuments();
+    const items = await MV.find(searchObj).populate('singer album').skip(sum).limit(size);
+    res.send({
+      count: count,
+      mvs: items
+    });
+  })
+  // 查详情
+  router.get('/mv/:id', async (req, res) => {
+    const item = await MV.findById(req.params.id);
+    res.send(item);
+  })
+
+  // MV上传
+  const mvUP = multer({ dest: 'mvs/' });
+  router.post('/uploadMV', adminLevel, mvUP.single('video'), (req, res) => {
+    // 直接把音乐对应路径返回
+    res.send({
+      name: req.file.originalname,
+      path: 'http://localhost:8888/uploadMV/'+req.file.filename
     });
   });
 

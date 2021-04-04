@@ -58,7 +58,7 @@
 
     <!-- dialog -->
     <el-dialog
-      title="添加音乐"
+      :title="dialogTitle"
       :visible.sync="dialogVisible"
       width="40%"
       :before-close="handleClose">
@@ -246,5 +246,10 @@ export default {
     this.getMusics();
     this.getSingersAndAlbums();
   },
+  computed: {
+    dialogTitle() {
+      return this.musicForm._id ? '修改音乐' : '添加音乐'
+    }
+  }
 }
 </script>

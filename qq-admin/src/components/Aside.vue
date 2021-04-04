@@ -35,6 +35,10 @@
         <i class="el-icon-service"></i>
         <span>歌曲管理</span>
       </el-menu-item>
+      <el-menu-item index="mv">
+        <i class="el-icon-service"></i>
+        <span>MV管理</span>
+      </el-menu-item>
     </el-submenu>
     <!-- 歌手管理 -->
     <el-menu-item index="singer">
