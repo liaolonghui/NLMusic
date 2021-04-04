@@ -6,6 +6,7 @@ module.exports = app => {
   const Music = require('../models/Music');
   const Style = require('../models/Style');
   const Singer = require('../models/Singer')
+  const MV = require('../models/MV')
 
   // albums
   // 获取专辑
@@ -108,6 +109,17 @@ module.exports = app => {
     const item = await Singer.findById(req.params.id).populate('style country');
     res.send(item);
   })
+
+
+  // mv
+  router.get('/mvList', async (req, res) => {
+    const models = await MV.find();
+    res.send(models);
+  });
+  router.get('/mv/:id', async (req, res) => {
+    const model = await MV.findById(req.params.id);
+    res.send(model);
+  });
 
 
   app.use('/client', router);
