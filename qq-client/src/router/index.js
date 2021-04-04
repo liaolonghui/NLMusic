@@ -7,7 +7,6 @@ import Login from '../views/Login.vue'
 import Search from '../views/Search.vue'
 import Download from '../components/other/Download.vue'
 import Singer from '../components/home/Singer.vue'
-import NewMusic from '../components/home/NewMusic.vue'
 import Top from '../components/home/Top.vue'
 import MV from '../components/home/MV.vue'
 import TV from '../components/home/TV.vue'
@@ -33,7 +32,6 @@ const routes = [
         children: [
           { path: '/home', name: 'HomePage', component: HomePage },
           { path: '/home/singer', name: 'Singer', component: Singer },
-          { path: '/home/newMusic', name: 'NewMusic', component: NewMusic },
           { path: '/home/top', name: 'Top', component: Top },
           { path: '/home/mv', name: 'MV', component: MV },
           { path: '/home/tv', name: 'TV', component: TV },
