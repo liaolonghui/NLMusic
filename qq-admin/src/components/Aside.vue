@@ -70,3 +70,11 @@ export default {
   },
 }
 </script>
+
+<style>
+  .el-menu {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+  }
+</style>
