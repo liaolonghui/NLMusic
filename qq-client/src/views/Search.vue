@@ -176,6 +176,7 @@ export default {
   padding: 10px;
   border: 1px solid #ccc;
   cursor: pointer;
+  transition: box-shadow 0.3s ease;
 }
 .searchData figure:hover {
   box-shadow: 0 0 10px #999;

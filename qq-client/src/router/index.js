@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import MyMusic from '../views/MyMusic.vue'
 import Music from '../views/Music.vue'
 import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import Search from '../views/Search.vue'
 import Download from '../components/other/Download.vue'
 import Singer from '../components/home/Singer.vue'
@@ -53,6 +54,12 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  // register
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   }
 ]
 
