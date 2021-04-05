@@ -1,5 +1,3 @@
-const { query } = require('express');
-
 module.exports = app => {
   const router = require('express').Router();
   const Album = require('../models/Album');
