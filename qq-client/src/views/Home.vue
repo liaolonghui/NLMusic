@@ -23,7 +23,10 @@
       <form class="search">
         <input type="text" placeholder="搜索音乐、专辑、歌手、用户" v-model="query" @keydown.enter="search" :disabled="isSearch">
       </form>
-      <button class="btn" @click="$router.push('/login')">
+      <button class="btn" v-if="$store.user">
+        {{user}}
+      </button>
+      <button class="btn" v-else @click="$router.push('/login')">
         登录
       </button>
     </header>
@@ -56,6 +59,10 @@ export default {
     isSearch () {
       return this.$route.path.indexOf('/search') !== -1
     }
+  },
+  mounted () {
+    // 获取用户信息
+    this.$store.dispatch('setUser')
   }
 }
 </script>

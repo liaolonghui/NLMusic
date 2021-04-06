@@ -1,15 +1,10 @@
 // 前端客户相关接口    signup signin vertify exit getUser
 module.exports = app => {
   const router = require('express').Router();
-  const Redis = require('redis');  // redis
   const nodeMailer = require('nodemailer'); // nodemailer
-  const Config = require('./config');
-  const Passport = require('./utils/passport');
-  const axios = require('./utils/axios');
+
   const User = require('../models/User'); // User模型
 
-  
-  const Client = Redis.createClient();
 
   // 注册
   router.post('/signup', (req, res) => {
@@ -54,8 +49,8 @@ module.exports = app => {
         // 正式注册
         const nuser = await User.create({username, password, email});
         if (nuser) {
-          const res = await axios.post('/users/signin', { username, password })
-          if (res.data && res.data.code === 1) {
+          const { data } = await axios.post('/client/users/signin', { username, password })
+          if (data && data.code === 1) {
             res.send({
               code: 1,
               msg: '注册成功'
@@ -86,31 +81,33 @@ module.exports = app => {
 
 
   // 登录
-router.post('/signin', async (req, res, next) => {
-  return Passport.authenticate('local',function(err,user,info,status){
+router.post('/signin', (req, res, next) => {
+  return Passport.authenticate('local',async function(err,user,info){
     if(err){
       res.send({
           code: -1,
           msg: err
       });
-      return res.end();
+      return false;
     }else{
       if(user){
         res.send({
-            code: 0,
+            code: 1,
             msg: '登录成功',
             user
         });
-        return req.login(user, () => {})
+        return req.login(user, (err) => {
+          if (err) next(err);
+        });
       }else{
         res.send({
-            code: 1,
+            code: -1,
             msg: info
         });
         return false;
       }
     }
-  })(req, next)
+  })(req, res, next)
 });
 
 router.post('/verify', async (req, res)=>{
@@ -162,21 +159,5 @@ router.get('/exit',async (req, res)=>{
   }
 });
 
-router.get('/getUser',async (req, res)=>{
-  console.log(req.isAuthenticated())
-  if(req.isAuthenticated()){
-    const {username, email} = req.session.passport.user;
-    res.send({
-        user:username,
-        email
-    });
-  }else{
-    res.send({
-        user:'',
-        email:''
-    });
-  }
-});
-
-  app.use('/users', router);
+  app.use('/client/users', router);
 }
