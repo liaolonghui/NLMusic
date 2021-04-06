@@ -23,8 +23,8 @@
       <form class="search">
         <input type="text" placeholder="搜索音乐、专辑、歌手、用户" v-model="query" @keydown.enter="search" :disabled="isSearch">
       </form>
-      <button class="btn" v-if="$store.user">
-        {{user}}
+      <button class="username" v-if="$store.state.user">
+        当前用户：{{$store.state.user.username}}
       </button>
       <button class="btn" v-else @click="$router.push('/login')">
         登录
@@ -120,6 +120,19 @@ nav.header-nav a:hover {
   height: 35px;
   width: 100%;
   padding-left: 15px;
+}
+
+.username {
+  background-color: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.username:hover {
+  color: #42b983;
 }
 
 .btn {

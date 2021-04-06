@@ -14,10 +14,16 @@ export default new Vuex.Store({
   },
   actions: {
     async setUser ({ commit }) {
-      const res = await Vue.prototype.$http.get('users/getUser')
-      console.log(res)
-      if (res.status === 200 && res.data && res.data.code === 1) {
-        commit('setUser', res.data)
+      const token = localStorage.getItem('token') || ''
+      if (token) {
+        const res = await Vue.prototype.$http.get('users/getUser', {
+          headers: {
+            Authorization: token
+          }
+        })
+        if (res.status === 200 && res.data && res.data.code === 1) {
+          commit('setUser', res.data.user)
+        }
       }
     }
   }

@@ -37,6 +37,7 @@ export default {
         })
         if (res.status === 200) {
           if (res.data && res.data.code === 1) {
+            window.localStorage.setItem('token', res.data.token)
             this.$router.push('/')
           } else {
             this.msg = res.data.msg

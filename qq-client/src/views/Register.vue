@@ -118,6 +118,7 @@ export default {
 
 <style>
   .register {
+    min-width: 1200px;
     font-size: 20px;
   }
   .register > img {
