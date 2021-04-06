@@ -3,6 +3,7 @@ module.exports = app => {
   const router = require('express').Router();
   const nodeMailer = require('nodemailer'); // nodemailer
   const jwt = require('jsonwebtoken'); // jwt
+  const mongoose = require('mongoose');
 
   const Config = require('./config/index') // smtp的配置
   const User = require('../models/User'); // User模型
@@ -163,6 +164,7 @@ module.exports = app => {
     });
   });
 
+  // 获取用户信息
   router.get('/getUser', async (req, res) => {
     const token = req.headers.authorization;
     if (token) {
@@ -173,7 +175,7 @@ module.exports = app => {
           msg: '请重新登陆' //无效token
         })
       }
-      const user = await User.findById(id);
+      const user = await User.findById(id).populate('musics Albums Singers');
       if (!user) {
         return res.send({
           code: -1,
@@ -198,6 +200,41 @@ module.exports = app => {
       })
     }
   });
+
+  // 收藏专辑
+  router.post('/likeAlbum', async (req, res) => {
+    const albumID = String(req.body.albumID);
+    const token = req.headers.authorization;
+    const { id: userID } = jwt.verify(token, app.get('secret'));
+    // 获取用户信息，然后在其基础上添加新数据
+    const user = await User.findById(userID);
+    // 原先收藏专辑中有则不再添加
+    if (user.Albums.indexOf(albumID) !== -1) {
+      res.send({
+        code: -1,
+        msg: '此专辑已在专辑收藏夹中'
+      });
+      return false;
+    }
+    // 把要添加的专辑id加进去
+    const newAlbums = [...user.Albums, albumID]
+    const model = await User.findByIdAndUpdate(userID, {
+      $set: {
+        "Albums": newAlbums
+      }
+    });
+    if (model) {
+      res.send({
+        code: -1,
+        msg: '专辑收藏成功'
+      });
+    } else {
+      res.send({
+        code: -1,
+        msg: '专辑收藏失败'
+      });
+    }
+  })
 
   app.use('/client/users', router);
 }

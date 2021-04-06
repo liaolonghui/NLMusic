@@ -4,8 +4,9 @@
       <section class="albumDes">
         <img :src="albumList[0].album.img" alt="logo" width="250">
         <aside>
+          <button id="collectAlbum" @click="collectAlbum">收藏专辑</button>
           <h2>专辑名：{{ albumList[0].album.name }}</h2>
-          <p style="color: #42b983; cursor: pointer;" @click="$router.push(`/home/singer/${albumList[0].singer._id}`)">歌手：{{ albumList[0].singer.name }}</p>
+          <p style="color: #42b983; cursor: pointer; display: inline;" @click="$router.push(`/home/singer/${albumList[0].singer._id}`)">歌手：{{ albumList[0].singer.name }}</p>
           <p style="color: #409EFF;">流派：{{ albumList[0].album.style.name }}</p>
           <p>流派描述：{{ albumList[0].album.style.description }}</p>
           <p style="color: #FFDC00;">唱片公司：{{ albumList[0].album.company }}</p>
@@ -70,6 +71,17 @@ export default {
     }
   },
   methods: {
+    // 收藏专辑
+    async collectAlbum () {
+      const res = await this.$http.post('users/likeAlbum', {
+        albumID: this.id
+      }, {
+        headers: {
+          Authorization: localStorage.getItem('token') || ''
+        }
+      })
+      console.log(res)
+    },
     // 发评论
     async submitComment () {
       if (this.$refs.comment.value.trim()) {
@@ -126,6 +138,23 @@ export default {
   .albumDes>aside {
     margin: 10px 0 0 20px;
     line-height: 25px;
+    position: relative;
+  }
+  #collectAlbum {
+    position: absolute;
+    top: 0px;
+    right: 400px;
+    cursor: pointer;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+  #collectAlbum:hover {
+    color: #42b983;
+    border-color: #42b983;
   }
   .albumTable {
     border-spacing: 0;
