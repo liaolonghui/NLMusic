@@ -3,6 +3,7 @@
     <div v-if="singer._id" class="singer-detail">
       <img :src="singer.img" alt="singer">
       <article>
+        <button id="LHSinger" @click="LHSinger" :class="{'like': isLike}">{{ isLike ? '取消收藏' : '添加收藏' }}</button>
         <p style="color: #FFDC00;">歌手：{{singer.name}}</p>
         <p>性别：{{singer.sex}}</p>
         <p style="color: #42b983;">歌手描述：{{singer.description}}</p>
@@ -37,6 +38,20 @@ export default {
     }
   },
   methods: {
+    // LHSinger
+    async LHSinger () {
+      const res = await this.$http.post('users/LHSinger', {
+        singerID: this.singerID
+      }, {
+        headers: {
+          Authorization: localStorage.getItem('token') || ''
+        }
+      })
+      if (res.data && res.data.code === 1) {
+        // 改变为最新的用户数据
+        this.$store.dispatch('setUser')
+      }
+    },
     async getSingerDetail () {
       const res = await this.$http.get(`singer/${this.singerID}`)
       this.singer = res.data
@@ -44,6 +59,19 @@ export default {
     async getAlbumList () {
       const res = await this.$http.get(`albumList/${this.singerID}`)
       this.albumList = res.data
+    }
+  },
+  computed: {
+    isLike () {
+      // user获取到后
+      if (this.$store.state.user) {
+        const singerIDs = this.$store.state.user.singers.map(singer => {
+          return singer._id
+        })
+        return singerIDs.indexOf(this.singerID) !== -1
+      } else {
+        return false
+      }
     }
   },
   created () {
@@ -61,6 +89,27 @@ export default {
   }
   .singer-detail>article {
     padding: 30px;
+    position: relative;
+  }
+  .singer-detail #LHSinger {
+    position: absolute;
+    top: 0px;
+    right: 200px;
+    cursor: pointer;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+  #LHSinger:hover {
+    color: #42b983;
+    border-color: #42b983;
+  }
+  #LHSinger.like {
+    color: #FF5151;
+    border-color: #FF5151;
   }
   .singer-detail>article>p {
     margin-bottom: 6px;

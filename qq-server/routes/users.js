@@ -201,7 +201,7 @@ module.exports = app => {
     }
   });
 
-  // 收藏专辑
+  // 收藏或取消专辑
   router.post('/LHAlbum', async (req, res) => {
     const albumID = String(req.body.albumID);
     const token = req.headers.authorization;
@@ -250,6 +250,57 @@ module.exports = app => {
       });
     }
   })
+
+  // 收藏或取消歌手
+  router.post('/LHSinger', async (req, res) => {
+    const singerID = String(req.body.singerID);
+    const token = req.headers.authorization;
+    const { id: userID } = jwt.verify(token, app.get('secret'));
+    // 获取用户信息，然后在其基础上添加新数据
+    const user = await User.findById(userID);
+    // 原先收藏歌手中有则不再添加
+    const index = user.Singers.indexOf(singerID)
+    if (index !== -1) {
+      // 取消收藏的逻辑
+      user.Singers.splice(index, 1);
+      const model = await User.findByIdAndUpdate(userID, {
+        $set: {
+          "Singers": user.Singers
+        }
+      });
+      if (model) {
+        res.send({
+          code: 1,
+          msg: '取消收藏成功'
+        });
+      } else {
+        res.send({
+          code: -1,
+          msg: '取消收藏失败'
+        });
+      }
+      return false;
+    }
+    // 把要添加的歌手id加进去（以下是收藏的逻辑）
+    const newSingers = [...user.Singers, singerID]
+    const model = await User.findByIdAndUpdate(userID, {
+      $set: {
+        "Singers": newSingers
+      }
+    });
+    if (model) {
+      res.send({
+        code: 1,
+        msg: '收藏成功'
+      });
+    } else {
+      res.send({
+        code: -1,
+        msg: '收藏失败'
+      });
+    }
+  })
+
 
   app.use('/client/users', router);
 }

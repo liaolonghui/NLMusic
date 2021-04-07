@@ -24,9 +24,13 @@
         {{ $store.state.user.musics }}
       </section>
       <!-- 歌手 -->
-      <section id="mySinger" v-if="type === 'singer'">
+      <section id="mySinger" v-if="type === 'singer'" class="clearfix">
         <h3>歌手</h3>
-        {{ $store.state.user.singers }}
+        <figure v-for="singer in $store.state.user.singers" :key="singer._id" @click="$router.push(`/home/singer/${singer._id}`)">
+          <img :src="singer.img" alt="singerIMG">
+          <p>歌手：{{singer.name}}</p>
+          <p>性别：{{singer.sex}}</p>
+        </figure>
       </section>
     </main>
   </div>
@@ -139,5 +143,29 @@ export default {
 }
 #myAlbum img {
   height: 80%;
+}
+/* singer */
+#mySinger > figure {
+  box-sizing: border-box;
+  float: left;
+  width: 220px;
+  height: 250px;
+  margin: 10px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+#mySinger > figure:hover {
+  box-shadow: 0 0 15px #ccc;
+}
+#mySinger > figure > p {
+  width: 200px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#mySinger img {
+  width: 100%;
 }
 </style>

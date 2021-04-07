@@ -22,6 +22,9 @@ a {
 input {
   outline: none;
 }
+audio, video {
+  outline: none;
+}
 
 .line-gra {
   background-image: linear-gradient(#fafafa, #fff);
