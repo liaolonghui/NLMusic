@@ -4,7 +4,7 @@
       <section class="albumDes">
         <img :src="albumList[0].album.img" alt="logo" width="250">
         <aside>
-          <button id="LHAlbum" @click="LHAlbum">{{ isLike ? '取消收藏' : '添加收藏' }}</button>
+          <button id="LHAlbum" @click="LHAlbum" :class="{like: isLike}">{{ isLike ? '取消收藏' : '添加收藏' }}</button>
           <h2>专辑名：{{ albumList[0].album.name }}</h2>
           <p style="color: #42b983; cursor: pointer; display: inline;" @click="$router.push(`/home/singer/${albumList[0].singer._id}`)">歌手：{{ albumList[0].singer.name }}</p>
           <p style="color: #409EFF;">流派：{{ albumList[0].album.style.name }}</p>
@@ -172,6 +172,10 @@ export default {
   #LHAlbum:hover {
     color: #42b983;
     border-color: #42b983;
+  }
+  #LHAlbum.like {
+    color: #FF5151;
+    border-color: #FF5151;
   }
   .albumTable {
     border-spacing: 0;
