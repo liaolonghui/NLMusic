@@ -26,3 +26,13 @@ input {
 .line-gra {
   background-image: linear-gradient(#fafafa, #fff);
 }
+
+
+.clearfix::after {
+  display: block;
+  content: '';
+  clear: both;
+  height: 0;
+  line-height: 0;
+  visibility: hidden;
+}

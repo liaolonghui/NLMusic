@@ -4,7 +4,7 @@
       <section class="albumDes">
         <img :src="albumList[0].album.img" alt="logo" width="250">
         <aside>
-          <button id="collectAlbum" @click="collectAlbum">收藏专辑</button>
+          <button id="LHAlbum" @click="LHAlbum">{{ isLike ? '取消收藏' : '添加收藏' }}</button>
           <h2>专辑名：{{ albumList[0].album.name }}</h2>
           <p style="color: #42b983; cursor: pointer; display: inline;" @click="$router.push(`/home/singer/${albumList[0].singer._id}`)">歌手：{{ albumList[0].singer.name }}</p>
           <p style="color: #409EFF;">流派：{{ albumList[0].album.style.name }}</p>
@@ -71,15 +71,19 @@ export default {
     }
   },
   methods: {
-    // 收藏专辑
-    async collectAlbum () {
-      const res = await this.$http.post('users/likeAlbum', {
+    // 收藏或者取消收藏专辑
+    async LHAlbum () {
+      const res = await this.$http.post('users/LHAlbum', {
         albumID: this.id
       }, {
         headers: {
           Authorization: localStorage.getItem('token') || ''
         }
       })
+      if (res.data && res.data.code === 1) {
+        // 改变为最新的用户数据
+        this.$store.dispatch('setUser')
+      }
       console.log(res)
     },
     // 发评论
@@ -116,6 +120,19 @@ export default {
       }
     }
   },
+  computed: {
+    isLike () {
+      // user获取到后
+      if (this.$store.state.user) {
+        const albumIDs = this.$store.state.user.albums.map(album => {
+          return album._id
+        })
+        return albumIDs.indexOf(this.id) !== -1
+      } else {
+        return false
+      }
+    }
+  },
   created () {
     this.getAlbumList()
     // 一进来直接让页面处于顶部
@@ -140,7 +157,7 @@ export default {
     line-height: 25px;
     position: relative;
   }
-  #collectAlbum {
+  #LHAlbum {
     position: absolute;
     top: 0px;
     right: 400px;
@@ -152,7 +169,7 @@ export default {
     border: 1px solid #ccc;
     outline: none;
   }
-  #collectAlbum:hover {
+  #LHAlbum:hover {
     color: #42b983;
     border-color: #42b983;
   }

@@ -13,6 +13,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    // 获取用户数据
     async setUser ({ commit }) {
       const token = localStorage.getItem('token') || ''
       if (token) {

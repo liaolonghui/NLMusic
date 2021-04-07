@@ -202,21 +202,36 @@ module.exports = app => {
   });
 
   // 收藏专辑
-  router.post('/likeAlbum', async (req, res) => {
+  router.post('/LHAlbum', async (req, res) => {
     const albumID = String(req.body.albumID);
     const token = req.headers.authorization;
     const { id: userID } = jwt.verify(token, app.get('secret'));
     // 获取用户信息，然后在其基础上添加新数据
     const user = await User.findById(userID);
     // 原先收藏专辑中有则不再添加
-    if (user.Albums.indexOf(albumID) !== -1) {
-      res.send({
-        code: -1,
-        msg: '此专辑已在专辑收藏夹中'
+    const index = user.Albums.indexOf(albumID)
+    if (index !== -1) {
+      // 取消收藏的逻辑
+      user.Albums.splice(index, 1);
+      const model = await User.findByIdAndUpdate(userID, {
+        $set: {
+          "Albums": user.Albums
+        }
       });
+      if (model) {
+        res.send({
+          code: 1,
+          msg: '取消收藏成功'
+        });
+      } else {
+        res.send({
+          code: -1,
+          msg: '取消收藏失败'
+        });
+      }
       return false;
     }
-    // 把要添加的专辑id加进去
+    // 把要添加的专辑id加进去（以下是收藏的逻辑）
     const newAlbums = [...user.Albums, albumID]
     const model = await User.findByIdAndUpdate(userID, {
       $set: {
@@ -225,7 +240,7 @@ module.exports = app => {
     });
     if (model) {
       res.send({
-        code: -1,
+        code: 1,
         msg: '专辑收藏成功'
       });
     } else {
