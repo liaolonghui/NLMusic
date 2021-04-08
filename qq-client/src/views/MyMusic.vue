@@ -21,7 +21,14 @@
       <!-- 音乐 -->
       <section id="myMusic" v-if="type === 'music'">
         <h3>音乐</h3>
-        {{ $store.state.user.musics }}
+        <div>
+          <figure v-for="music in $store.state.user.musics" :key="music._id" @click="changeMusic(music)">
+            <img :src="music.album.img" alt="img">
+            <p>音乐：{{music.name}}</p>
+            <p>歌手：{{music.singer.name}}</p>
+            <p>所属专辑：{{music.album.name}}</p>
+          </figure>
+        </div>
       </section>
       <!-- 歌手 -->
       <section id="mySinger" v-if="type === 'singer'" class="clearfix">
@@ -53,6 +60,15 @@ export default {
     }
   },
   methods: {
+    // 改变当前播放的音乐(vuex)
+    changeMusic (music) {
+      this.$store.dispatch('changeMusic', {
+        name: music.name,
+        path: music.music[0].path,
+        singer: music.singer.name,
+        img: music.album.img
+      })
+    },
     // 改变观看的收藏
     changeType (e) {
       if (e.target === e.currentTarget) return
@@ -167,5 +183,32 @@ export default {
 }
 #mySinger img {
   width: 100%;
+}
+/* music */
+#myMusic div {
+  display: flex;
+  flex-wrap: wrap;
+}
+#myMusic figure {
+  height: 270px;
+  width: 200px;
+  padding: 10px;
+  margin: 0 30px 0 0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#myMusic figure:hover {
+  color: #42b983;
+  box-shadow: 0 0 15px #ccc;
+}
+#myMusic figure img {
+  width: 100%;
+}
+#myMusic p {
+  width: 180px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

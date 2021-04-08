@@ -39,11 +39,11 @@
           <th>专辑</th>
         </tr>
         <tr v-for="music in musicData" :key="music._id">
-          <td @click="changeMusic(music)">
-            <p>{{ music.name }}</p>
+          <td>
+            <p @click="changeMusic(music)">{{ music.name }}</p>
           </td>
-          <td @click="$router.push(`/home/singer/${music.singer._id}`)">
-            <p>{{ music.singer.name }}</p>
+          <td>
+            <p @click="$router.push(`/home/singer/${music.singer._id}`)">{{ music.singer.name }}</p>
           </td>
           <td>
             <p @click="$router.push(`/home/album/${music.album._id}`)">{{ music.album.name }}</p>
@@ -223,6 +223,7 @@ export default {
   text-align: center;
 }
 .search-table td>p {
+  display: inline-block;
   cursor: pointer;
 }
 .search-table td>p:hover {

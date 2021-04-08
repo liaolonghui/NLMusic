@@ -22,7 +22,8 @@
         <tr v-for="music in albumList" :key="music._id">
           <td>
             {{ music.name }}
-            <i @click="changeMusic(music)"></i>
+            <i class="play" @click="changeMusic(music)"></i>
+            <i :class="{love: isLove(music._id)}" @click="LHMusic(music._id)"></i>
           </td>
           <td>{{ music.singer.name }}</td>
           <td>{{ music.album.name }}</td>
@@ -80,6 +81,20 @@ export default {
         img: music.album.img
       })
     },
+    // 收藏或者取消收藏音乐
+    async LHMusic (musicID) {
+      const res = await this.$http.post('users/LHMusic', {
+        musicID
+      }, {
+        headers: {
+          Authorization: localStorage.getItem('token') || ''
+        }
+      })
+      if (res.data && res.data.code === 1) {
+        // 改变为最新的用户数据
+        this.$store.dispatch('setUser')
+      }
+    },
     // 收藏或者取消收藏专辑
     async LHAlbum () {
       const res = await this.$http.post('users/LHAlbum', {
@@ -126,9 +141,21 @@ export default {
       if ((res.status >= 200 && res.status < 300) || res.status === 304) {
         this.albumList = res.data
       }
+    },
+    // 音乐是否是love
+    isLove (musicID) {
+      if (this.$store.state.user) {
+        const musicIDs = this.$store.state.user.musics.map(music => {
+          return music._id
+        })
+        return musicIDs.indexOf(musicID) !== -1
+      } else {
+        return false
+      }
     }
   },
   computed: {
+    // 当前专辑是否是收藏
     isLike () {
       // user获取到后
       if (this.$store.state.user) {
@@ -176,6 +203,7 @@ export default {
     background-color: #fff;
     border: 1px solid #ccc;
     outline: none;
+    transition: all 0.3s ease;
   }
   #LHAlbum:hover {
     color: #42b983;
@@ -199,14 +227,14 @@ export default {
   }
   .albumTable>tr>td {
     padding-left: 10px;
-    min-width: 200px;
+    min-width: 250px;
     height: 40px;
   }
   .albumTable>tr>td:first-child {
     cursor: pointer;
     position: relative;
   }
-  .albumTable>tr>td:first-child>i {
+  .albumTable>tr>td:first-child>i.play {
     display: none;
     width: 30px;
     height: 30px;
@@ -216,10 +244,23 @@ export default {
     border-radius: 50%;
     position: absolute;
     top: 5px;
-    right: 50px;
+    right: 70px;
   }
-  .albumTable>tr>td:first-child:hover>i {
+  .albumTable>tr>td:first-child:hover>i.play {
     display: block;
+  }
+  .albumTable>tr>td:first-child>i:last-child {
+    width: 30px;
+    height: 30px;
+    background: url('../../assets/imgs/love.png') no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 5px;
+    right: 25px;
+    transition: background 0.3s ease;
+  }
+  .albumTable>tr>td:first-child>i.love {
+    background-image: url('../../assets/imgs/love_fill.png');
   }
   /* comment */
   .comment {
