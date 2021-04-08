@@ -3,11 +3,13 @@ module.exports = app => {
   const router = require('express').Router();
   const nodeMailer = require('nodemailer'); // nodemailer
   const jwt = require('jsonwebtoken'); // jwt
-  const mongoose = require('mongoose');
 
   const Config = require('./config/index') // smtp的配置
   const User = require('../models/User'); // User模型
   const Code = require('../models/Code'); // Code模型
+  const Music = require('../models/Music');
+  const Album = require('../models/Album');
+  const Singer = require('../models/Singer');
 
 
   // 注册
@@ -26,7 +28,6 @@ module.exports = app => {
       })
       let saveCode = item.code;
       let saveExpire = item.expire;
-      console.log(saveCode, code)
       if (code == saveCode) {
         if (new Date().getTime() - saveExpire > 0) {
           res.send({
@@ -206,6 +207,7 @@ module.exports = app => {
     }
   });
 
+
   // 收藏或取消音乐
   router.post('/LHMusic', async (req, res) => {
     const musicID = String(req.body.musicID);
@@ -213,7 +215,7 @@ module.exports = app => {
     const { id: userID } = jwt.verify(token, app.get('secret'));
     // 获取用户信息，然后在其基础上添加新数据
     const user = await User.findById(userID);
-    // 原先收藏专辑中有则不再添加
+    // 原先收藏音乐中有则不再添加
     const index = user.musics.indexOf(musicID)
     if (index !== -1) {
       // 取消收藏的逻辑
@@ -224,6 +226,14 @@ module.exports = app => {
         }
       });
       if (model) {
+        // 修改音乐的love
+        const music = await Music.findById(musicID);
+        let love = music.love || 0;
+        await Music.findByIdAndUpdate(musicID, {
+          $set: {
+            "love": --love
+          }
+        });
         res.send({
           code: 1,
           msg: '取消收藏成功'
@@ -236,7 +246,7 @@ module.exports = app => {
       }
       return false;
     }
-    // 把要添加的专辑id加进去（以下是收藏的逻辑）
+    // 把要添加的音乐id加进去（以下是收藏的逻辑）
     const newMusics = [...user.musics, musicID]
     const model = await User.findByIdAndUpdate(userID, {
       $set: {
@@ -244,6 +254,14 @@ module.exports = app => {
       }
     });
     if (model) {
+      // 修改音乐的love
+      const music = await Music.findById(musicID);
+      let love = music.love || 0;
+      await Music.findByIdAndUpdate(musicID, {
+        $set: {
+          "love": ++love
+        }
+      });
       res.send({
         code: 1,
         msg: '收藏成功'
@@ -255,6 +273,7 @@ module.exports = app => {
       });
     }
   });
+
 
   // 收藏或取消专辑
   router.post('/LHAlbum', async (req, res) => {
@@ -274,6 +293,14 @@ module.exports = app => {
         }
       });
       if (model) {
+        // 修改专辑的love
+        const album = await Album.findById(albumID);
+        let love = album.love || 0;
+        await Album.findByIdAndUpdate(albumID, {
+          $set: {
+            "love": --love
+          }
+        });
         res.send({
           code: 1,
           msg: '取消收藏成功'
@@ -294,6 +321,14 @@ module.exports = app => {
       }
     });
     if (model) {
+      // 修改专辑的love
+      const album = await Album.findById(albumID);
+      let love = album.love || 0;
+      await Album.findByIdAndUpdate(albumID, {
+        $set: {
+          "love": ++love
+        }
+      });
       res.send({
         code: 1,
         msg: '专辑收藏成功'
@@ -305,6 +340,7 @@ module.exports = app => {
       });
     }
   });
+
 
   // 收藏或取消歌手
   router.post('/LHSinger', async (req, res) => {
@@ -324,6 +360,14 @@ module.exports = app => {
         }
       });
       if (model) {
+        // 修改歌手的love
+        const singer = await Singer.findById(singerID);
+        let love = singer.love || 0;
+        await Singer.findByIdAndUpdate(singerID, {
+          $set: {
+            "love": --love
+          }
+        });
         res.send({
           code: 1,
           msg: '取消收藏成功'
@@ -344,6 +388,14 @@ module.exports = app => {
       }
     });
     if (model) {
+        // 修改歌手的love
+        const singer = await Singer.findById(singerID);
+        let love = singer.love || 0;
+        await Singer.findByIdAndUpdate(singerID, {
+          $set: {
+            "love": ++love
+          }
+        });
       res.send({
         code: 1,
         msg: '收藏成功'

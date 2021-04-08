@@ -120,6 +120,20 @@ module.exports = app => {
   });
 
 
+
+  // 排行榜
+  router.get('/Top', async (req, res) => {
+    const musics = await Music.find().sort({love: -1}).populate('singer album').limit(10)
+    const albums = await Album.find().sort({love: -1}).limit(10)
+    const singers = await Singer.find().sort({love: -1}).limit(10)
+    res.send({
+      musics,
+      albums,
+      singers
+    })
+  })
+
+
   app.use('/client', router);
 
 }

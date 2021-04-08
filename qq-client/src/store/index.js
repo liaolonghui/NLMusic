@@ -22,6 +22,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    // 清空user信息
+    clearUser ({ commit }) {
+      commit('setUser', null)
+    },
     // 获取用户数据
     async setUser ({ commit }) {
       const token = localStorage.getItem('token') || ''

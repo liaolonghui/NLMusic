@@ -12,6 +12,9 @@
 </template>
 
 <style>
+  div.music {
+    margin-bottom: 120px;
+  }
   div.music>nav {
     width: 660px;
     height: 52px;
@@ -19,7 +22,6 @@
     line-height: 52px;
     font-size: 14px;
   }
-
   div.music>nav>a {
     color: black;
     margin-left: 30px;

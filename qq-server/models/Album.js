@@ -8,7 +8,8 @@ const schema = new mongoose.Schema({
   company: { type: String },  // 唱片公司
   img: { type: String },     // 专辑图
   // musics: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Music' }]  // 有哪些音乐
-  comments: [{ type: String }] // 评论
+  comments: [{ type: String }], // 评论
+  love: { type: Number } // 收藏数
 })
 
 module.exports = mongoose.model('Album', schema);

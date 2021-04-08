@@ -25,7 +25,7 @@
           <figure v-for="music in $store.state.user.musics" :key="music._id" @click="changeMusic(music)">
             <img :src="music.album.img" alt="img">
             <p>音乐：{{music.name}}</p>
-            <p>歌手：{{music.singer.name}}</p>
+            <p>演唱歌手：{{music.singer.name}}</p>
             <p>所属专辑：{{music.album.name}}</p>
           </figure>
         </div>
@@ -193,14 +193,14 @@ export default {
   height: 270px;
   width: 200px;
   padding: 10px;
-  margin: 0 30px 0 0;
+  margin: 0 15px 20px 0;
   border: 1px solid #ccc;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 #myMusic figure:hover {
   color: #42b983;
-  box-shadow: 0 0 15px #ccc;
+  box-shadow: 0 0 10px #ccc;
 }
 #myMusic figure img {
   width: 100%;

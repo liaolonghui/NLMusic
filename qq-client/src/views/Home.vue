@@ -25,6 +25,7 @@
       </form>
       <button class="username" v-if="$store.state.user">
         当前用户：{{$store.state.user.username}}
+        <span @click="logout">退出登录</span>
       </button>
       <button class="btn" v-else @click="$router.push('/login')">
         登录
@@ -71,6 +72,12 @@ export default {
     }
   },
   methods: {
+    // logout
+    logout () {
+      localStorage.clear()
+      // 并且清空vuex中保存的user信息
+      this.$store.dispatch('clearUser')
+    },
     // 点击top或者bottom时
     scaleChange () {
       this.scalePlay = !this.scalePlay
@@ -220,9 +227,22 @@ nav.header-nav a:hover {
   margin-left: 20px;
   font-size: 13px;
   font-weight: 500;
+  position: relative;
 }
 .username:hover {
   color: #42b983;
+}
+.username > span {
+  position: absolute;
+  right: 50%;
+  bottom: 5px;
+  margin-right: -35px;
+  padding: 3px;
+  border: 1px solid #ccc;
+  color: red;
+}
+.username > span:hover {
+  border-color: red;
 }
 
 .btn {
