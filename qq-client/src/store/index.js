@@ -5,11 +5,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null
+    user: null,
+    playMusic: {
+      name: '',
+      path: '',
+      singer: '',
+      img: ''
+    }
   },
   mutations: {
     setUser (state, user) {
       state.user = user
+    },
+    changeMusic (state, music) {
+      state.playMusic = music
     }
   },
   actions: {
@@ -26,6 +35,9 @@ export default new Vuex.Store({
           commit('setUser', res.data.user)
         }
       }
+    },
+    changeMusic ({ commit }, music) {
+      commit('changeMusic', music)
     }
   }
 })

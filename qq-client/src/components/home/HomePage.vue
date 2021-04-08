@@ -34,13 +34,13 @@
       <h2>歌曲推荐</h2>
       <article class="music-container">
         <figure v-for="music in musicData" :key="music._id" class="music-item">
-          <div class="albumImg" @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">
+          <div class="albumImg" @click="changeMusic(music)">
             <img :src="music.album.img" alt="albumImg">
             <i class="music-cover"></i>
           </div>
           <aside>
             <p @click="$router.push(`/home/album/${music.album._id}`)">专辑：{{ music.album.name }}</p>
-            <p @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)">音乐：{{ music.name }}</p>
+            <p @click="changeMusic(music)">音乐：{{ music.name }}</p>
             <p @click="$router.push(`/home/singer/${music.singer._id}`)">歌手：{{ music.singer.name }}</p>
           </aside>
         </figure>
@@ -63,6 +63,15 @@ export default {
     }
   },
   methods: {
+    // 改变当前播放的音乐(vuex)
+    changeMusic (music) {
+      this.$store.dispatch('changeMusic', {
+        name: music.name,
+        path: music.music[0].path,
+        singer: music.singer.name,
+        img: music.album.img
+      })
+    },
     // 获取歌曲数据
     async getMusics () {
       const res = await this.$http.get('musics')

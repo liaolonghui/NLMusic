@@ -32,15 +32,14 @@
     </article>
     <!-- 歌曲搜索展示 -->
     <article v-if="searchType === '歌曲'">
-      <table class="search-table">
+      <table class="search-table music-table">
         <tr>
           <th>音乐</th>
           <th>歌手</th>
           <th>专辑</th>
-          <th>播放</th>
         </tr>
         <tr v-for="music in musicData" :key="music._id">
-          <td>
+          <td @click="changeMusic(music)">
             <p>{{ music.name }}</p>
           </td>
           <td @click="$router.push(`/home/singer/${music.singer._id}`)">
@@ -48,9 +47,6 @@
           </td>
           <td>
             <p @click="$router.push(`/home/album/${music.album._id}`)">{{ music.album.name }}</p>
-          </td>
-          <td>
-            <audio :src="music.music[0].path" controls></audio>
           </td>
         </tr>
       </table>
@@ -102,6 +98,15 @@ export default {
     }
   },
   methods: {
+    // 改变当前播放的音乐
+    changeMusic (music) {
+      this.$store.dispatch('changeMusic', {
+        name: music.name,
+        path: music.music[0].path,
+        singer: music.singer.name,
+        img: music.album.img
+      })
+    },
     // 使用本组件的参数搜索
     async viewData (e) {
       // 如果e的code不是Enter，说明是通过点击li发起的请求。
@@ -206,8 +211,12 @@ export default {
 .search-table {
   margin-left: 50px;
 }
+.search-table.music-table {
+  width: 1100px;
+  margin: 50px auto;
+}
 .search-table td {
-  min-width: 300px;
+  min-width: 310px;
   height: 50px;
   padding: 10px 0 10px 0;
   border-bottom: 1px solid #42b983;

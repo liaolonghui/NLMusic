@@ -31,6 +31,23 @@
       </button>
     </header>
     <router-view></router-view>
+    <!-- footer 播放栏 -->
+    <footer class="nowMusic" :class="{ top: scalePlay }" v-if="nowMusic">
+      <progress @click="changeProgress" :value="nowMusicDetail.playTime" :max="nowMusicDetail.musicTime" class="progress"></progress>
+      <audio :src="nowMusic" ref="musicAudio" autoplay></audio>
+      <aside>
+        <p>{{ nowMusicDetail.nowMusicTime }} / {{ nowMusicDetail.nowPlayTime }}</p>
+        <p>歌曲：{{ $store.state.playMusic.name }}</p>
+        <p>歌手：{{ $store.state.playMusic.singer }}</p>
+      </aside>
+      <i class="play" @click="pauseOrPlayMusic" :class="{ pause: pausePlay }"></i>
+      <i class="toTop" :class="{ toBottom: scalePlay }" @click="scaleChange"></i>
+      <label>音量：<input type="text" v-model="volume" ></label>
+      <figure v-if="scalePlay" class="bottom-album" @click="pauseOrPlayMusic">
+        <img class="play-bar" :class="{ play: !pausePlay }" src="@/assets/imgs/play-bar.png" />
+        <img class="albumImg" :class="{ pause: pausePlay }" :src="$store.state.playMusic.img" alt="album" />
+      </figure>
+    </footer>
   </div>
 </template>
 
@@ -40,10 +57,50 @@ export default {
   components: {},
   data () {
     return {
+      nowMusic: '', // 当前所播放的音乐地址
+      pausePlay: false, // 是否暂停音乐
+      nowMusicDetail: {
+        nowMusicTime: '0:0', // 当前音乐时长
+        nowPlayTime: '0:0', // 已播放时长
+        musicTime: 0, // 未处理的音乐时长
+        playTime: 0 // 未处理的已播放时长
+      },
+      volume: 100, // 音量
+      scalePlay: false, // 是否放大播放栏
       query: '' // 查询参数
     }
   },
   methods: {
+    // 点击top或者bottom时
+    scaleChange () {
+      this.scalePlay = !this.scalePlay
+    },
+    // 改变播放进度
+    changeProgress (e) {
+      const rate = e.clientX / window.innerWidth
+      const t = rate * this.nowMusicDetail.musicTime
+      this.$refs.musicAudio.currentTime = t
+    },
+    // 保存已播放时长的函数
+    savePlayTime () {
+      const t = this.$refs.musicAudio.currentTime
+      const m = Math.floor(t / 60)
+      const s = Math.round(t % 60)
+      this.nowMusicDetail.nowPlayTime = m + ':' + s
+      this.nowMusicDetail.playTime = t
+    },
+    // 暂停音乐
+    pauseOrPlayMusic () {
+      if (this.$refs.musicAudio.paused) {
+        this.$refs.musicAudio.play()
+        this.pausePlay = false
+        this.musicTimer = setInterval(this.savePlayTime, 1000)
+      } else {
+        this.$refs.musicAudio.pause()
+        this.pausePlay = true
+        clearInterval(this.musicTimer)
+      }
+    },
     // 搜索
     search () {
       this.$router.push(`/search/${this.query}`)
@@ -63,6 +120,39 @@ export default {
   mounted () {
     // 获取用户信息
     this.$store.dispatch('setUser')
+  },
+  watch: {
+    // 音量
+    volume (newVolume) {
+      if (newVolume > 100) {
+        this.$refs.musicAudio.volume = 1
+      } else if (newVolume < 0) {
+        this.$refs.musicAudio.volume = 0
+      } else {
+        this.$refs.musicAudio.volume = newVolume / 100
+      }
+    },
+    // 歌曲
+    '$store.state.playMusic' (newMusic) {
+      // 改变当前播放音乐
+      clearInterval(this.musicTimer)
+      this.pausePlay = false
+      this.nowMusic = newMusic.path // 修改当前所播放的音乐
+      this.$nextTick(() => {
+        this.$refs.musicAudio.load()
+        this.$refs.musicAudio.oncanplay = () => {
+          const t = this.$refs.musicAudio.duration
+          const m = Math.floor(t / 60)
+          const s = Math.round(t % 60)
+          this.nowMusicDetail.nowMusicTime = m + ':' + s
+          this.nowMusicDetail.musicTime = t
+          this.musicTimer = setInterval(this.savePlayTime, 1000)
+        }
+      })
+    }
+  },
+  destroyed () {
+    clearInterval(this.musicTimer)
   }
 }
 </script>
@@ -196,5 +286,128 @@ nav.header-nav a:hover {
 .clientDown>.down>button:hover {
   background-color: green;
 }
-
+  /* footer */
+  .nowMusic {
+    background-color: #242424;
+    width: 100%;
+    height: 70px;
+    z-index: 999;
+    position: fixed;
+    bottom: 0;
+    color: white;
+    transition: height .3s ease-in;
+  }
+  .nowMusic.top {
+    height: 100%;
+  }
+  .nowMusic>label {
+    position: absolute;
+    right: 200px;
+    top: 25px;
+    width: 100px;
+  }
+  .nowMusic>label>input {
+    width: 30px;
+  }
+  .nowMusic>.progress {
+    background-color: #42b983;
+    width: 100%;
+    height: 5px;
+    position: absolute;
+    top: -2px;
+    left: 0;
+    cursor: pointer;
+  }
+  .progress::-webkit-progress-bar {
+    background: #ededed;
+    border-radius: 8px;
+  }
+  .progress::-webkit-progress-value {
+    background: #42b983;
+    border-radius: 8px;
+  }
+  .nowMusic>aside {
+    margin: 12px 0 0 50px;
+  }
+  .nowMusic p:nth-child(2) {
+    font-size: 12px;
+  }
+  .nowMusic p:nth-child(3) {
+    font-size: 12px;
+  }
+  .nowMusic>i.play {
+    width: 36px;
+    height: 36px;
+    background-color: #fff;
+    background-image: url(../assets/imgs/pause.png);
+    background-size: contain;
+    border-radius: 50%;
+    z-index: 666;
+    position: absolute;
+    top: 17px;
+    left: 50%;
+    margin-left: -15px;
+    cursor: pointer;
+  }
+  .nowMusic>i.pause {
+    background-image: url(../assets/imgs/play.png);
+  }
+  /* totop tobottom */
+  i.toTop {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 50px;
+    top: 20px;
+    background-image: url(../assets/imgs/top.png);
+    background-size: contain;
+    background-color: #242424;
+    color: white;
+  }
+  i.toBottom {
+    background-image: url(../assets/imgs/bottom.png);
+  }
+  /* bottom-album */
+  .bottom-album {
+    position: relative;
+    box-sizing: border-box;
+    width: 430px;
+    height: 430px;
+    padding: 50px;
+    margin: 100px auto 0 auto;
+    background-color: #000;
+    border: 15px solid #bbb;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .bottom-album>img.play-bar {
+    width: 150px;
+    position: absolute;
+    top: -130px;
+    left: 50%;
+    margin-left: -5px;
+    transform: rotate(-30deg) translate(60px, -30px);
+    transition: all .3s ease-in;
+  }
+  .bottom-album>img.play {
+    transform: rotate(0) translate(0, 0);
+  }
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(0)
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .bottom-album>img.albumImg {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    animation: rotateAnimation 15s linear infinite;
+  }
+  .bottom-album>img.albumImg.pause {
+    animation-play-state: paused;
+  }
 </style>

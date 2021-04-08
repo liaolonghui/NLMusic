@@ -22,7 +22,7 @@
         <tr v-for="music in albumList" :key="music._id">
           <td>
             {{ music.name }}
-            <i @click="$emit('changeMusic', music.music[0].path, music.name, music.singer.name, music.album.img)"></i>
+            <i @click="changeMusic(music)"></i>
           </td>
           <td>{{ music.singer.name }}</td>
           <td>{{ music.album.name }}</td>
@@ -71,6 +71,15 @@ export default {
     }
   },
   methods: {
+    // 改变当前播放的音乐(vuex)
+    changeMusic (music) {
+      this.$store.dispatch('changeMusic', {
+        name: music.name,
+        path: music.music[0].path,
+        singer: music.singer.name,
+        img: music.album.img
+      })
+    },
     // 收藏或者取消收藏专辑
     async LHAlbum () {
       const res = await this.$http.post('users/LHAlbum', {
