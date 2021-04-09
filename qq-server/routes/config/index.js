@@ -4,10 +4,10 @@ module.exports = {
       return 'smtp.qq.com'
     },
     get user() {
-      return '1340881930@qq.com'
+      return '没有'
     },
     get pass() {
-      return 'aibopfwqyeoygiaj'
+      return '没有'
     },
     // code验证码
     get code() {
