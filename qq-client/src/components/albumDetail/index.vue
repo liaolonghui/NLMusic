@@ -2,7 +2,7 @@
   <div class="albumDetail">
     <main class="albumList">
       <section class="albumDes">
-        <img :src="albumList[0].album.img" alt="logo" width="250">
+        <img :src="albumList[0].album.img" alt="logo" width="250" height=250>
         <aside>
           <button id="LHAlbum" @click="LHAlbum" :class="{'like': isLike}">{{ isLike ? '取消收藏' : '添加收藏' }}</button>
           <h2>专辑名：{{ albumList[0].album.name }}</h2>

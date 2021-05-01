@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="singer._id" class="singer-detail">
-      <img :src="singer.img" alt="singer">
+      <img :src="singerImg" alt="singer">
       <article>
         <button id="LHSinger" @click="LHSinger" :class="{'like': isLike}">{{ isLike ? '取消收藏' : '添加收藏' }}</button>
         <p style="color: #FFDC00;">歌手：{{singer.name}}</p>
@@ -72,6 +72,10 @@ export default {
       } else {
         return false
       }
+    },
+    // 歌手图片
+    singerImg () {
+      return this.singer.img ? this.singer.img : require('../../assets/imgs/defaultImg.jpg')
     }
   },
   created () {
@@ -115,6 +119,7 @@ export default {
     margin-bottom: 6px;
   }
   .singer-detail img {
+    min-width: 400px;
     height: 400px;
   }
   .singer-albums {

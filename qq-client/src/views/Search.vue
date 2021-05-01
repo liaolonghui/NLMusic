@@ -188,6 +188,7 @@ export default {
 }
 .searchData > article img {
   width: 120px;
+  height: 120px;
 }
 .searchData .item-description {
   padding: 5px;

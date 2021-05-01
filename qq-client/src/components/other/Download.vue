@@ -55,11 +55,11 @@ export default {
 }
 
 div.download {
-  min-height: 580px;
+  height: 100%;
   background-color: #333;
 }
 .download > .section {
-  height: 560px;
+  height: 100%;
   padding: 10px;
   color: white;
 }

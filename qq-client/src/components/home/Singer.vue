@@ -3,7 +3,7 @@
     <section v-for="singer in singerList" :key="singer._id" @click="$router.push(`/home/singer/${singer._id}`)">
       <h3>{{ singer.name }}</h3>
       <p>性别：{{ singer.sex }}</p>
-      <img :src="singer.img" alt="singer">
+      <img :src="singerImg(singer.img)" alt="singer">
     </section>
   </div>
 </template>
@@ -19,6 +19,10 @@ export default {
     async getSingerList () {
       const res = await this.$http.get('singerList')
       this.singerList = res.data
+    },
+    // 歌手图片
+    singerImg (img) {
+      return img || require('../../assets/imgs/defaultImg.jpg')
     }
   },
   created () {
