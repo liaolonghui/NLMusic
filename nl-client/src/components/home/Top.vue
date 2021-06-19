@@ -14,14 +14,14 @@
           <th>歌手</th>
           <th>专辑</th>
           <th>播放</th>
-          <th>收藏人数</th>
+          <th style="text-align: center;">收藏人数</th>
         </tr>
         <tr v-for="music in musicTop" :key="music._id">
           <td>{{music.name}}</td>
           <td><p @click="$router.push(`/home/singer/${music.singer._id}`)">{{music.singer.name}}</p></td>
           <td><p @click="$router.push(`/home/album/${music.album._id}`)">{{music.album.name}}</p></td>
-          <td><button @click="changeMusic(music)">播放{{music.name}}</button></td>
-          <td>{{music.love || 0}}</td>
+          <td><button style="width: 200px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;" @click="changeMusic(music)">播放{{music.name}}</button></td>
+          <td style="text-align: center;">{{music.love || 0}}</td>
         </tr>
       </table>
     </article>
@@ -32,13 +32,13 @@
           <th>专辑</th>
           <th>唱片公司</th>
           <th>专辑封面</th>
-          <th>收藏人数</th>
+          <th style="text-align: center;">收藏人数</th>
         </tr>
         <tr v-for="album in albumTop" :key="album._id" @click="$router.push(`/home/album/${album._id}`)">
           <td>{{album.name}}</td>
           <td>{{album.company}}</td>
-          <td><img :src="album.img" alt="albumIMG" width="100px"></td>
-          <td>{{album.love || 0}}</td>
+          <td style="padding: 10px 0;"><img :src="album.img" alt="albumIMG" width="80px"></td>
+          <td style="text-align: center;">{{album.love || 0}}</td>
         </tr>
       </table>
     </article>
@@ -50,14 +50,14 @@
           <th>性别</th>
           <th>照片</th>
           <th>描述</th>
-          <th>收藏人数</th>
+          <th style="text-align: center;">喜爱人数</th>
         </tr>
         <tr v-for="singer in singerTop" :key="singer._id" @click="$router.push(`/home/singer/${singer._id}`)">
           <td>{{singer.name}}</td>
           <td>{{singer.sex}}</td>
-          <td><img :src="singer.img" alt="singerIMG"></td>
+          <td style="padding: 10px 0;"><img :src="singer.img" alt="singerIMG" width="80px"></td>
           <td><p>{{singer.description}}</p></td>
-          <td>{{singer.love || 0}}</td>
+          <td style="text-align: center;">{{singer.love || 0}}</td>
         </tr>
       </table>
     </article>
@@ -149,6 +149,7 @@ export default {
   }
   #musicTop table td {
     min-width: 260px;
+    height: 70px;
     padding: 15px 0 20px 0;
     border-bottom: 1px solid #42b983;
   }
@@ -183,7 +184,7 @@ export default {
   }
   /* singer */
   #singerTop img {
-    width: 100px;
+    width: 80px;
   }
   #singerTop table {
     text-align: left;
