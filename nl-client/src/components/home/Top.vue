@@ -124,7 +124,10 @@ export default {
   }
   ul#top-type {
     display: flex;
+    width: 400px;
+    padding-bottom: 15px;
     margin: 20px 0 30px 150px;
+    border-bottom: 1px solid #ccc;
   }
   #top-type > li {
     margin-right: 30px;

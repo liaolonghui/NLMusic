@@ -3,6 +3,8 @@ uploads/
 mvs/
 dist/
 
+.idea/
+
 # Logs
 logs
 *.log
